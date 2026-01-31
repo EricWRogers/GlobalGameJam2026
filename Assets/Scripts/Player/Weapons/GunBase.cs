@@ -1,6 +1,7 @@
 using System;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.VFX;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public abstract class GunBase : NetworkBehaviour
@@ -17,9 +18,9 @@ public abstract class GunBase : NetworkBehaviour
     protected int currentAmmo;
     [SerializeField] protected LayerMask enemyMask;
     [SerializeField] protected LayerMask hitMask;
-
+    [SerializeField] private VisualEffect muzzleFlashVFX;
     protected float nextFireLocal;
-    protected float nextFireServer;
+    protected float nextFireServer = 0f;
 
     public XRGrabInteractable grabInteractable;
     public bool triggerHeld = false;
@@ -32,9 +33,6 @@ public abstract class GunBase : NetworkBehaviour
     void Awake()
     {
         currentAmmo = maxAmmo;
-
-
-
     }
     //public override void OnNetworkSpawn()
     //{
@@ -65,10 +63,11 @@ public abstract class GunBase : NetworkBehaviour
         Debug.Log("Trying to fire Is Owner");
 
         if (useAmmo && currentAmmo <= 0) return;
+
         nextFireLocal = Time.time + (1f / fireRate);
 
 
-        FireServerRpc(muzzle.position, muzzle.forward);
+        FireClientRpc(muzzle.position, muzzle.forward);
     }
 
 
@@ -91,10 +90,18 @@ public abstract class GunBase : NetworkBehaviour
     private void FireClientRpc(Vector3 origin, Vector3 dir)
     {
         ShootGun(origin, dir);
+        MuzzleFlash();
         Debug.Log("Fired AK " );
     }
 
- 
+
+
+
+    protected void MuzzleFlash()
+    {
+        Debug.Log("Playing Muzzle Flash VFX");
+        muzzleFlashVFX.Play();
+    }
     protected abstract void ShootGun(Vector3 origin, Vector3 dir);
 
 

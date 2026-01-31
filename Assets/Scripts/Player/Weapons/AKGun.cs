@@ -19,6 +19,7 @@ public class AKGun : GunBase
             }
         }
         currentAmmo-= 1;
+        
 
     }
 
