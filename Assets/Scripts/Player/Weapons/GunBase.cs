@@ -8,12 +8,15 @@ public abstract class GunBase : NetworkBehaviour
     [SerializeField] protected Transform muzzle;
 
     [Header("Stats")]
-    [SerializeField] protected float fireRate = 10f; 
+    public float damage = 10f;
+    public float fireRate = 10f; 
     [SerializeField] protected float range = 100f;
 
     [SerializeField] protected bool useAmmo = false;
     [SerializeField] protected int maxAmmo = 30;
     protected int currentAmmo;
+    [SerializeField] protected LayerMask enemyMask;
+    [SerializeField] protected LayerMask hitMask;
 
     protected float nextFireLocal;
     protected float nextFireServer;
@@ -87,12 +90,12 @@ public abstract class GunBase : NetworkBehaviour
     [ClientRpc]
     private void FireClientRpc(Vector3 origin, Vector3 dir)
     {
-        ShotGun(origin, dir);
+        ShootGun(origin, dir);
         Debug.Log("Fired AK " );
     }
 
  
-    protected abstract void ShotGun(Vector3 origin, Vector3 dir);
+    protected abstract void ShootGun(Vector3 origin, Vector3 dir);
 
 
 }
