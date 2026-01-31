@@ -1,29 +1,50 @@
 using Unity.Netcode;
 using UnityEngine;
 
-public class NetworkedLight : NetworkBehaviour
+public class NetworkedLight : NetworkBehaviour 
 {
     public Light targetLight;
+    private bool isOn = false; 
 
     public void TurnOn()
     {
-        TurnOnServerRpc();
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    private void TurnOnServerRpc()
-    {
-        if (targetLight != null)
+        if (isOn) return; 
+        
+        Debug.Log($"Turning light ON from client {OwnerClientId}");
+        isOn = true;
+        
+        if (targetLight) targetLight.enabled = true;
+        
+        
+        ClientRpcParams clientRpcParams = new ClientRpcParams
         {
-            targetLight.enabled = true;
-            TurnOnClientRpc();
-        }
+            Send = new ClientRpcSendParams
+            {
+                TargetClientIds = GetOtherClientIds()
+            }
+        };
+        
+        TurnOnClientRpc(clientRpcParams);
     }
 
     [ClientRpc]
-    private void TurnOnClientRpc()
+    private void TurnOnClientRpc(ClientRpcParams clientRpcParams = default)
     {
-        if (targetLight != null)
-            targetLight.enabled = true;
+        Debug.Log("ClientRpc received - turning light ON");
+        isOn = true;
+        if (targetLight) targetLight.enabled = true;
+    }
+    
+    private ulong[] GetOtherClientIds()
+    {
+        var clients = NetworkManager.Singleton.ConnectedClients;
+        var otherClients = new System.Collections.Generic.List<ulong>();
+        
+        foreach (var client in clients)
+        {
+            if (client.Key != OwnerClientId) 
+                otherClients.Add(client.Key);
+        }
+        return otherClients.ToArray();
     }
 }
