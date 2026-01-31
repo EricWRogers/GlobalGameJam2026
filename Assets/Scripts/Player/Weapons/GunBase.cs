@@ -1,6 +1,8 @@
 using System;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.VFX;
+using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public abstract class GunBase : NetworkBehaviour
@@ -15,11 +17,13 @@ public abstract class GunBase : NetworkBehaviour
     [SerializeField] protected bool useAmmo = false;
     [SerializeField] protected int maxAmmo = 30;
     protected int currentAmmo;
+    
     [SerializeField] protected LayerMask enemyMask;
     [SerializeField] protected LayerMask hitMask;
-
-    protected float nextFireLocal;
-    protected float nextFireServer;
+    [SerializeField] private VisualEffect muzzleFlashVFX;
+    
+    // Owner-only rate limiting
+    protected float nextFireTime;
 
     public XRGrabInteractable grabInteractable;
     public bool triggerHeld = false;
@@ -29,73 +33,92 @@ public abstract class GunBase : NetworkBehaviour
         triggerHeld = held;
     }
 
-    void Awake()
+    public override void OnNetworkSpawn()
     {
         currentAmmo = maxAmmo;
 
+        grabInteractable.selectEntered.AddListener(OnGrabbed);
+        grabInteractable.selectExited.AddListener(OnDropped);
 
-
+        grabInteractable.activated.AddListener(OnActivated);
+        grabInteractable.deactivated.AddListener(OnDeactivated);
+        
     }
-    //public override void OnNetworkSpawn()
-    //{
-    //    if(!IsOwner)
-    //    {
-    //        grabInteractable.enabled = false;
-    //    }
-    //    else
-    //    {
-    //        grabInteractable.enabled = true;
-    //        grabInteractable.selectExited.AddListener(_ => triggerHeld = false);
-    //        grabInteractable.selectEntered.AddListener(_ => triggerHeld = true);
-    //    }
-    //}
-//
+
+    private void OnGrabbed(SelectEnterEventArgs args)
+    {
+        
+    }
+
+    private void OnDropped(SelectExitEventArgs args)
+    {
+        triggerHeld = false;
+    }
+
+    private void OnActivated(ActivateEventArgs args)
+    {
+        triggerHeld = true;   // trigger pressed
+    }
+
+    private void OnDeactivated(DeactivateEventArgs args)
+    {
+        triggerHeld = false;  // trigger released
+    }
+
     void Update()
     {
-        if(triggerHeld)
-        {
-            TryFire();
-        }
+        // Owner-only firing logic
+        if (!IsOwner || !triggerHeld) return;
+        TryFire();
     }
 
     public void TryFire()
     {
-        Debug.Log("Before Is Owner Check");
-        if (!IsOwner) return;
-        Debug.Log("Trying to fire Is Owner");
-
+        // Rate limiting FIRST
+        if (Time.time < nextFireTime) return;
+        
         if (useAmmo && currentAmmo <= 0) return;
-        nextFireLocal = Time.time + (1f / fireRate);
 
+        // Update authoritative state
+        nextFireTime = Time.time + (1f / fireRate);
+        if (useAmmo) currentAmmo--;
 
-        FireServerRpc(muzzle.position, muzzle.forward);
+        Vector3 origin = muzzle.position;
+        Vector3 dir = muzzle.forward;
+
+        // Owner does FULL authoritative firing (damage, raycast, etc.)
+        ShootGun(origin, dir);
+        
+        // Owner plays effects locally
+        MuzzleFlash();
+
+        // Broadcast effects to ALL other clients
+        FireEffectsClientRpc(origin, dir);
     }
-
-
-    [ServerRpc(RequireOwnership = false)]
-    private void FireServerRpc(Vector3 origin, Vector3 dir, ServerRpcParams rpc = default)
-    {
-
-        if (Time.time < nextFireServer)
-            return;
-
-        nextFireServer = Time.time + (1f / fireRate);
-
-        dir.Normalize();
-
-        FireClientRpc(origin, dir);
-    }
-
 
     [ClientRpc]
-    private void FireClientRpc(Vector3 origin, Vector3 dir)
+    private void FireEffectsClientRpc(Vector3 origin, Vector3 dir)
     {
-        ShootGun(origin, dir);
-        Debug.Log("Fired AK " );
+        Debug.Log("Firing Client RPC");
+        if (IsOwner) return;
+        MuzzleFlash();
     }
 
- 
+    protected void MuzzleFlash()
+    {
+        Debug.Log("Playing Muzzle Flash VFX");  
+        if (muzzleFlashVFX != null)
+            muzzleFlashVFX.Play();
+    }
+    
     protected abstract void ShootGun(Vector3 origin, Vector3 dir);
 
-
+    public override void OnNetworkDespawn()
+    {
+        if (IsOwner && grabInteractable != null)
+        {
+            grabInteractable.selectEntered.RemoveListener(OnGrabbed);
+            grabInteractable.selectExited.RemoveListener(OnDropped);
+        }
+    }
 }
