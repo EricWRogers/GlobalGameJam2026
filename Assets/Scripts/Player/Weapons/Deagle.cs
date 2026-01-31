@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class AKGun : GunBase
+public class Deagle : GunBase
 {
 
 
-    protected override void ShootGun(Vector3 origin, Vector3 dir)
+ protected override void ShootGun(Vector3 origin, Vector3 dir)
     {
         bool hit = Physics.Raycast(origin, dir, out RaycastHit hitInfo, range, hitMask);
 
@@ -21,5 +21,4 @@ public class AKGun : GunBase
         currentAmmo-= 1;
 
     }
-
 }

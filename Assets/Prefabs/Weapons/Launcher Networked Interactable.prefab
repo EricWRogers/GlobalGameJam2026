@@ -79,6 +79,7 @@ GameObject:
   - component: {fileID: 1838923763017715179}
   - component: {fileID: 7935035591066614581}
   - component: {fileID: 2735326125560907934}
+  - component: {fileID: 2194275408554117865}
   m_Layer: 0
   m_Name: AK_47_slide
   m_TagString: Untagged
@@ -158,6 +159,28 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &2194275408554117865
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1154086137476178130}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 7804865607343918282, guid: 931a003cde75390449131c7ee93fa818, type: 3}
 --- !u!1 &2549772427921513099
 GameObject:
   m_ObjectHideFlags: 0
@@ -414,6 +437,7 @@ GameObject:
   - component: {fileID: 9198617779233607462}
   - component: {fileID: 8459465074841480557}
   - component: {fileID: 7519076951648265332}
+  - component: {fileID: 2616501048680465782}
   m_Layer: 0
   m_Name: Launcher Blue
   m_TagString: Untagged
@@ -493,6 +517,28 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &2616501048680465782
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4642874918890696429}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -2093765132265330288, guid: 931a003cde75390449131c7ee93fa818, type: 3}
 --- !u!1 &5074911928821399074
 GameObject:
   m_ObjectHideFlags: 0
@@ -895,8 +941,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InteractionManager: {fileID: 0}
   m_Colliders:
-  - {fileID: 2568287023279541476}
-  - {fileID: 5921875079306768184}
+  - {fileID: 7176972167181557169}
+  - {fileID: 8891755632601541330}
+  - {fileID: 589290749033809201}
   m_InteractionLayers:
     m_Bits: 1
   m_DistanceCalculationMode: 1
@@ -1048,7 +1095,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3102825978
+  GlobalObjectIdHash: 1222049828
   InScenePlacedSourceGlobalObjectIdHash: 2727466294
   DeferredDespawnTick: 0
   Ownership: 3
@@ -1203,16 +1250,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AKGun
   ShowTopMostFoldoutHeaderGroup: 1
   muzzle: {fileID: 5256239687508070692}
+  damage: 20
   fireRate: 10
   range: 100
   useAmmo: 0
   maxAmmo: 30
-  grabInteractable: {fileID: 0}
-  triggerHeld: 0
-  damage: 20
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 0
   hitMask:
     serializedVersion: 2
     m_Bits: 0
+  grabInteractable: {fileID: 0}
+  triggerHeld: 0
 --- !u!114 &4964825065032313618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1247,6 +1297,7 @@ GameObject:
   - component: {fileID: 3922820903498655035}
   - component: {fileID: 2868247674868060815}
   - component: {fileID: 9177454127096857930}
+  - component: {fileID: 7153520974466884231}
   m_Layer: 0
   m_Name: AK_DrumMag
   m_TagString: Untagged
@@ -1326,6 +1377,28 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &7153520974466884231
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8333442025884666572}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4663626232445852825, guid: 931a003cde75390449131c7ee93fa818, type: 3}
 --- !u!1 &8708683687638159737
 GameObject:
   m_ObjectHideFlags: 0
@@ -1335,8 +1408,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7318368247251800279}
-  - component: {fileID: 2568287023279541476}
-  - component: {fileID: 5921875079306768184}
+  - component: {fileID: 7176972167181557169}
+  - component: {fileID: 8891755632601541330}
+  - component: {fileID: 589290749033809201}
   m_Layer: 0
   m_Name: Collision
   m_TagString: Untagged
@@ -1359,8 +1433,8 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8492995138294929671}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &2568287023279541476
-CapsuleCollider:
+--- !u!65 &7176972167181557169
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1377,13 +1451,11 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.07
-  m_Height: 0.3775676
-  m_Direction: 2
-  m_Center: {x: 0, y: 0, z: 0.045}
---- !u!136 &5921875079306768184
-CapsuleCollider:
+  serializedVersion: 3
+  m_Size: {x: 0.20589942, y: 0.12183836, z: 0.03276062}
+  m_Center: {x: -0.11460681, y: 0.06890838, z: -0.011055946}
+--- !u!65 &8891755632601541330
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1400,8 +1472,27 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.04
-  m_Height: 0.17
-  m_Direction: 1
-  m_Center: {x: 0, y: -0.12, z: 0}
+  serializedVersion: 3
+  m_Size: {x: 0.051081717, y: 0.20005998, z: 0.028744698}
+  m_Center: {x: 0.02099979, y: 0.048301473, z: -0.014386654}
+--- !u!65 &589290749033809201
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8708683687638159737}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.43246114, y: 0.09887016, z: 0.037519455}
+  m_Center: {x: 0.23620987, y: 0.10807654, z: -0.018857956}

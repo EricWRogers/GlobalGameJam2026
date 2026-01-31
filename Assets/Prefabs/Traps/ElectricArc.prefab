@@ -58,7 +58,7 @@ Transform:
   m_GameObject: {fileID: 3983811639856551991}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.23813745, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -89,7 +89,7 @@ Transform:
   m_GameObject: {fileID: 4195689387482994612}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 13.571469, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -111,6 +111,7 @@ GameObject:
   - component: {fileID: 1069896015254418858}
   - component: {fileID: 5883498263208699223}
   - component: {fileID: 5293747661346599634}
+  - component: {fileID: 7777819924854248279}
   m_Layer: 0
   m_Name: ElectricArc2
   m_TagString: Untagged
@@ -165,16 +166,16 @@ VisualEffect:
       m_Array: []
     m_Vector3f:
       m_Array:
-      - m_Value: {x: 0, y: 0, z: 0}
+      - m_Value: {x: -5.18, y: 0.20588, z: 2.88}
         m_Name: Pos1
         m_Overridden: 1
-      - m_Value: {x: 0, y: 1, z: 0}
+      - m_Value: {x: -5.18, y: 2.7158802, z: 2.88}
         m_Name: Pos2
         m_Overridden: 1
-      - m_Value: {x: 0, y: 2, z: 0}
+      - m_Value: {x: -5.18, y: 5.2258797, z: 2.88}
         m_Name: Pos3
         m_Overridden: 1
-      - m_Value: {x: 0, y: 3, z: 0}
+      - m_Value: {x: -5.18, y: 7.7358794, z: 2.88}
         m_Name: Pos4
         m_Overridden: 1
     m_Vector4f:
@@ -326,6 +327,23 @@ MonoBehaviour:
   m_Property:
     m_Name: Pos4
   Target: {fileID: 8097464579852342017}
+--- !u!114 &7777819924854248279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4483646296183165745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 979546771a4ee1a4a877d647717a94ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ElectricTrapEditorHelper
+  Pos1: {fileID: 4425857837847393244}
+  Pos2: {fileID: 8230017671632745406}
+  Pos3: {fileID: 8838752305549427724}
+  Pos4: {fileID: 8097464579852342017}
+  maxDistance: 20
 --- !u!1 &4722731532684725692
 GameObject:
   m_ObjectHideFlags: 0
@@ -351,7 +369,7 @@ Transform:
   m_GameObject: {fileID: 4722731532684725692}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalPosition: {x: 0, y: 26.904802, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -382,7 +400,7 @@ Transform:
   m_GameObject: {fileID: 4757008458776576390}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.23813745, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -413,7 +431,7 @@ Transform:
   m_GameObject: {fileID: 5731880526146554288}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalPosition: {x: 0, y: 26.904802, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -435,6 +453,7 @@ GameObject:
   - component: {fileID: 5191654408197501312}
   - component: {fileID: 1197392585792721943}
   - component: {fileID: 6866364077553712167}
+  - component: {fileID: 260771200564015577}
   m_Layer: 0
   m_Name: ElectricArc1
   m_TagString: Untagged
@@ -489,16 +508,16 @@ VisualEffect:
       m_Array: []
     m_Vector3f:
       m_Array:
-      - m_Value: {x: 0, y: 0, z: 0}
+      - m_Value: {x: -5.18, y: 0.20588, z: 2.88}
         m_Name: Pos1
         m_Overridden: 1
-      - m_Value: {x: 0, y: 1, z: 0}
+      - m_Value: {x: -5.18, y: 2.7158802, z: 2.88}
         m_Name: Pos2
         m_Overridden: 1
-      - m_Value: {x: 0, y: 2, z: 0}
+      - m_Value: {x: -5.18, y: 5.2258797, z: 2.88}
         m_Name: Pos3
         m_Overridden: 1
-      - m_Value: {x: 0, y: 3, z: 0}
+      - m_Value: {x: -5.18, y: 7.7358794, z: 2.88}
         m_Name: Pos4
         m_Overridden: 1
     m_Vector4f:
@@ -650,6 +669,23 @@ MonoBehaviour:
   m_Property:
     m_Name: Pos4
   Target: {fileID: 67838303867152030}
+--- !u!114 &260771200564015577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7037972312848880910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 979546771a4ee1a4a877d647717a94ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ElectricTrapEditorHelper
+  Pos1: {fileID: 6656687096814761034}
+  Pos2: {fileID: 9121666580654072657}
+  Pos3: {fileID: 4950461993933032344}
+  Pos4: {fileID: 67838303867152030}
+  maxDistance: 20
 --- !u!1 &7371744801861679305
 GameObject:
   m_ObjectHideFlags: 0
@@ -675,7 +711,7 @@ Transform:
   m_GameObject: {fileID: 7371744801861679305}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 13.571469, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -706,7 +742,7 @@ Transform:
   m_GameObject: {fileID: 8628455091859592510}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalPosition: {x: 0, y: 40.238132, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -737,7 +773,7 @@ Transform:
   m_GameObject: {fileID: 8932368603669143364}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalPosition: {x: 0, y: 40.238132, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
