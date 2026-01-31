@@ -970,11 +970,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 1
   windowsGamepadBackendHint: 0
-  cloudProjectId: 7755dcf5-09e0-433c-8a81-c96990dbe3a6
+  cloudProjectId: fd17fb50-5ba5-466d-a8e8-4eea52df50fa
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
   projectName: GlobalGameJam2026
-  organizationId: ordinarybird
+  organizationId: yourgeekeric
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
