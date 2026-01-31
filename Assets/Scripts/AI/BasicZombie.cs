@@ -9,9 +9,6 @@ public class BasicZombie : Enemy
     private float m_attackTimer;
     new void Update()
     {
-        if(!IsServer)
-            return;
-
         base.Update();
         agent.SetDestination(curTarget.transform.position);
         m_curDist = agent.remainingDistance;

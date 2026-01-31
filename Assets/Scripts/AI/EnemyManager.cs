@@ -17,10 +17,6 @@ public class EnemyManager : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         m_serverIsReady = true;
-        Debug.Log($"NM Exists: {NetworkManager.Singleton != null}");
-    Debug.Log($"IsListening: {NetworkManager.Singleton?.IsListening}");
-    Debug.Log($"IsServer: {NetworkManager.Singleton?.IsServer}");
-    Debug.Log($"IsClient: {NetworkManager.Singleton?.IsClient}");
 
     }
 
@@ -30,16 +26,16 @@ public class EnemyManager : NetworkBehaviour
     {
         
         if(!m_serverIsReady) return;
-        if(!IsServer)return;
         m_timer -= Time.deltaTime;
         if(m_timer <= 0 && m_amountSpawned <= spawnAmount)
         {
-            SpawnEnemy(spawnPos.position);
+            SpawnEnemyClientRpc(spawnPos.position);
             m_amountSpawned++;
             m_timer = spawnTimer;
         }
     }
-    void SpawnEnemy(Vector3 _pos)
+    [ClientRpc]
+    void SpawnEnemyClientRpc(Vector3 _pos, ClientRpcParams clientRpcParams = default)
     {
         GameObject enemy = Instantiate(prefab, _pos, transform.rotation);
         enemy.GetComponent<NetworkObject>().Spawn();
