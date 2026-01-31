@@ -1,5 +1,7 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public abstract class GunBase : NetworkBehaviour
 {
@@ -16,12 +18,49 @@ public abstract class GunBase : NetworkBehaviour
     protected float nextFireLocal;
     protected float nextFireServer;
 
+    public XRGrabInteractable grabInteractable;
+    public bool triggerHeld = false;
+
+    public void SetTriggerHeld(bool held)
+    {
+        triggerHeld = held;
+    }
+
+    void Awake()
+    {
+        currentAmmo = maxAmmo;
+
+
+
+    }
+    //public override void OnNetworkSpawn()
+    //{
+    //    if(!IsOwner)
+    //    {
+    //        grabInteractable.enabled = false;
+    //    }
+    //    else
+    //    {
+    //        grabInteractable.enabled = true;
+    //        grabInteractable.selectExited.AddListener(_ => triggerHeld = false);
+    //        grabInteractable.selectEntered.AddListener(_ => triggerHeld = true);
+    //    }
+    //}
+//
+    //void Update()
+    //{
+    //    if(triggerHeld)
+    //    {
+    //        TryFire();
+    //    }
+    //}
+
     public void TryFire()
     {
         if (!IsOwner) return;
-        if (muzzle == null) return;
 
-        if (Time.time < nextFireLocal) return;
+
+        if (useAmmo && currentAmmo <= 0) return;
         nextFireLocal = Time.time + (1f / fireRate);
 
 
@@ -39,11 +78,19 @@ public abstract class GunBase : NetworkBehaviour
 
         dir.Normalize();
 
-        FireServer(origin, dir);
+        FireClientRpc(origin, dir);
     }
 
-    /// SERVER-ONLY
-    protected abstract void FireServer(Vector3 origin, Vector3 dir);
+
+    [ClientRpc]
+    private void FireClientRpc(Vector3 origin, Vector3 dir)
+    {
+        ShotGun(origin, dir);
+        Debug.Log("Fired AK " );
+    }
+
+ 
+    protected abstract void ShotGun(Vector3 origin, Vector3 dir);
 
 
 }
