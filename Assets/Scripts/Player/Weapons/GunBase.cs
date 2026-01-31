@@ -1,6 +1,7 @@
 using System;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.VFX;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public abstract class GunBase : NetworkBehaviour
@@ -17,9 +18,9 @@ public abstract class GunBase : NetworkBehaviour
     protected int currentAmmo;
     [SerializeField] protected LayerMask enemyMask;
     [SerializeField] protected LayerMask hitMask;
-
+    [SerializeField] private VisualEffect muzzleFlashVFX;
     protected float nextFireLocal;
-    protected float nextFireServer;
+    protected float nextFireServer = 0f;
 
     public XRGrabInteractable grabInteractable;
     public bool triggerHeld = false;
@@ -32,9 +33,6 @@ public abstract class GunBase : NetworkBehaviour
     void Awake()
     {
         currentAmmo = maxAmmo;
-
-
-
     }
     //public override void OnNetworkSpawn()
     //{
@@ -56,6 +54,30 @@ public abstract class GunBase : NetworkBehaviour
         {
             TryFire();
         }
+
+        if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsListening)
+    {
+        Debug.Log("No network session running (no host/server).");
+        return;
+    }
+
+    // Am I the host (client + server in one)?
+    if (NetworkManager.Singleton.IsHost)
+    {
+        Debug.Log("I am the host (server + client).");
+    }
+
+    // Am I a dedicated server?
+    if (NetworkManager.Singleton.IsServer && !NetworkManager.Singleton.IsClient)
+    {
+        Debug.Log("I am a dedicated server.");
+    }
+
+    // Am I a pure client connected to some host?
+    if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
+    {
+        Debug.Log("I am a client connected to a host.");
+    }
     }
 
     public void TryFire()
@@ -65,37 +87,77 @@ public abstract class GunBase : NetworkBehaviour
         Debug.Log("Trying to fire Is Owner");
 
         if (useAmmo && currentAmmo <= 0) return;
+
         nextFireLocal = Time.time + (1f / fireRate);
 
+        ClientRpcParams clientRpcParams = new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams
+            {
+                TargetClientIds = GetOtherClientIds()
+            }
+        };
 
-        FireServerRpc(muzzle.position, muzzle.forward);
+
+        FireClientRpc(muzzle.position, muzzle.forward, clientRpcParams);
+        Debug.Log("Called Fire Client RPC");
     }
 
 
-    [ServerRpc(RequireOwnership = false)]
-    private void FireServerRpc(Vector3 origin, Vector3 dir, ServerRpcParams rpc = default)
-    {
+    //[ServerRpc(RequireOwnership = false)]
+    //private void FireServerRpc(Vector3 origin, Vector3 dir, ServerRpcParams rpc = default)
+    //{
+    //    Debug.Log("Server RCP Fired");
+    //    nextFireServer = Time.time + (1f / fireRate);
 
-        if (Time.time < nextFireServer)
-            return;
+    //    dir.Normalize();
 
-        nextFireServer = Time.time + (1f / fireRate);
-
-        dir.Normalize();
-
-        FireClientRpc(origin, dir);
-    }
+    //    FireClientRpc(origin, dir);
+    //}
 
 
     [ClientRpc]
-    private void FireClientRpc(Vector3 origin, Vector3 dir)
+    private void FireClientRpc(Vector3 origin, Vector3 dir, ClientRpcParams clientRpcParams = default)
     {
-        ShootGun(origin, dir);
+        if(IsOwner)
+        {
+            Debug.Log("Owner firing gun");
+            ShootGun(origin, dir);
+            muzzleFlashVFX.Play();
+            return;
+        }
+        
+        MuzzleFlash();
         Debug.Log("Fired AK " );
     }
 
- 
+
+
+
+    protected void MuzzleFlash()
+    {
+    
+        Debug.Log("Playing Muzzle Flash VFX");
+        if(IsOwner) return;
+        muzzleFlashVFX.Play();
+    }
     protected abstract void ShootGun(Vector3 origin, Vector3 dir);
+
+
+
+
+    private ulong[] GetOtherClientIds()
+    {
+        var clients = NetworkManager.Singleton.ConnectedClients;
+        var otherClients = new System.Collections.Generic.List<ulong>();
+        
+        foreach (var client in clients)
+        {
+            if (client.Key != OwnerClientId) 
+                otherClients.Add(client.Key);
+        }
+        return otherClients.ToArray();
+    }
 
 
 }
