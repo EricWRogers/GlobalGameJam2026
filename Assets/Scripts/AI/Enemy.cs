@@ -22,12 +22,10 @@ public class Enemy : NetworkBehaviour
 
     public void Update()
     {
-        if(!IsServer)
-            return;
         if(curTarget == null)
         {
             curTarget = GetClosestPlayerInRange();
-            agent.SetDestination(curTarget.transform.position);
+            //agent.SetDestination(curTarget.transform.position);
         }
         //if(agent.remainingDistance)
         if(agent.remainingDistance > switchTargetRange)
