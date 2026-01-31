@@ -3279,7 +3279,7 @@ PrefabInstance:
         type: 3}
       propertyPath: spawnInteractablePrefab
       value: 
-      objectReference: {fileID: 4491021611675629685, guid: b46c44800fc739e4db2a09d1a0a3d1c1,
+      objectReference: {fileID: 8022275882070961381, guid: c3b2a56df8ce4ba43b1c4d2ea3747da3,
         type: 3}
     - target: {fileID: 1874016425288323545, guid: 07f5a5a8f9e3f0e4bb51dd532e6afb40,
         type: 3}
@@ -4376,24 +4376,36 @@ PrefabInstance:
         type: 3}
       propertyPath: spawnInteractablePrefab
       value: 
-      objectReference: {fileID: 8290185373875084108, guid: b2fcb6cf1ffb73845a39b25910743f6b,
+      objectReference: {fileID: 8022275882070961381, guid: c3b2a56df8ce4ba43b1c4d2ea3747da3,
         type: 3}
     - target: {fileID: 1874016425288323545, guid: 07f5a5a8f9e3f0e4bb51dd532e6afb40,
         type: 3}
       propertyPath: m_GizmoHelper.meshPreviewHelpers.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1874016425288323545, guid: 07f5a5a8f9e3f0e4bb51dd532e6afb40,
         type: 3}
       propertyPath: m_GizmoHelper.meshPreviewHelpers.Array.data[0].mesh
       value: 
-      objectReference: {fileID: -835688487210165693, guid: 94238a26012295a469dd8811d6a143aa,
+      objectReference: {fileID: 6430157885437550921, guid: fe834b767f0d9e6419fcf5775d428045,
+        type: 3}
+    - target: {fileID: 1874016425288323545, guid: 07f5a5a8f9e3f0e4bb51dd532e6afb40,
+        type: 3}
+      propertyPath: m_GizmoHelper.meshPreviewHelpers.Array.data[1].mesh
+      value: 
+      objectReference: {fileID: -1879993788153011852, guid: fe834b767f0d9e6419fcf5775d428045,
         type: 3}
     - target: {fileID: 1874016425288323545, guid: 07f5a5a8f9e3f0e4bb51dd532e6afb40,
         type: 3}
       propertyPath: m_GizmoHelper.meshPreviewHelpers.Array.data[0].meshFilter
       value: 
-      objectReference: {fileID: 8479943327758429681, guid: b2fcb6cf1ffb73845a39b25910743f6b,
+      objectReference: {fileID: 4623783626836398732, guid: c3b2a56df8ce4ba43b1c4d2ea3747da3,
+        type: 3}
+    - target: {fileID: 1874016425288323545, guid: 07f5a5a8f9e3f0e4bb51dd532e6afb40,
+        type: 3}
+      propertyPath: m_GizmoHelper.meshPreviewHelpers.Array.data[1].meshFilter
+      value: 
+      objectReference: {fileID: 96639258834221846, guid: c3b2a56df8ce4ba43b1c4d2ea3747da3,
         type: 3}
     - target: {fileID: 1874016425288323545, guid: 07f5a5a8f9e3f0e4bb51dd532e6afb40,
         type: 3}
@@ -4402,9 +4414,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1874016425288323545, guid: 07f5a5a8f9e3f0e4bb51dd532e6afb40,
         type: 3}
+      propertyPath: m_GizmoHelper.meshPreviewHelpers.Array.data[1].showPreview
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1874016425288323545, guid: 07f5a5a8f9e3f0e4bb51dd532e6afb40,
+        type: 3}
       propertyPath: m_GizmoHelper.meshPreviewHelpers.Array.data[0].meshRenderer
       value: 
-      objectReference: {fileID: 5929614320230783291, guid: b2fcb6cf1ffb73845a39b25910743f6b,
+      objectReference: {fileID: 67779488498179188, guid: c3b2a56df8ce4ba43b1c4d2ea3747da3,
+        type: 3}
+    - target: {fileID: 1874016425288323545, guid: 07f5a5a8f9e3f0e4bb51dd532e6afb40,
+        type: 3}
+      propertyPath: m_GizmoHelper.meshPreviewHelpers.Array.data[1].meshRenderer
+      value: 
+      objectReference: {fileID: 4172941862600527432, guid: c3b2a56df8ce4ba43b1c4d2ea3747da3,
         type: 3}
     - target: {fileID: 3574915620247463832, guid: 07f5a5a8f9e3f0e4bb51dd532e6afb40,
         type: 3}
