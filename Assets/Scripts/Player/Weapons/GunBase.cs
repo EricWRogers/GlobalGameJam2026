@@ -47,18 +47,19 @@ public abstract class GunBase : NetworkBehaviour
     //    }
     //}
 //
-    //void Update()
-    //{
-    //    if(triggerHeld)
-    //    {
-    //        TryFire();
-    //    }
-    //}
+    void Update()
+    {
+        if(triggerHeld)
+        {
+            TryFire();
+        }
+    }
 
     public void TryFire()
     {
+        Debug.Log("Before Is Owner Check");
         if (!IsOwner) return;
-
+        Debug.Log("Trying to fire Is Owner");
 
         if (useAmmo && currentAmmo <= 0) return;
         nextFireLocal = Time.time + (1f / fireRate);
@@ -67,7 +68,8 @@ public abstract class GunBase : NetworkBehaviour
         FireServerRpc(muzzle.position, muzzle.forward);
     }
 
-    [ServerRpc]
+
+    [ServerRpc(RequireOwnership = false)]
     private void FireServerRpc(Vector3 origin, Vector3 dir, ServerRpcParams rpc = default)
     {
 
