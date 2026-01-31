@@ -130,6 +130,7 @@ namespace XRMultiplayer
                 m_RoomNameText.text = $"{XRINetworkGameManager.LocalPlayerName.Value}'s Room";
             }
             XRINetworkGameManager.Instance.CreateNewLobby(m_RoomNameText.text, m_Private, m_PlayerCount);
+            
             m_ConnectionSuccessText.text = $"Joining {m_RoomNameText.text}";
         }
 

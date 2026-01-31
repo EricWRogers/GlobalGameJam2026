@@ -660,6 +660,11 @@ PrefabInstance:
       objectReference: {fileID: 244505892}
     - target: {fileID: 2808410049059023866, guid: 0267a1d338db2bf4c9625e450bbaaad0,
         type: 3}
+      propertyPath: m_SessionType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2808410049059023866, guid: 0267a1d338db2bf4c9625e450bbaaad0,
+        type: 3}
       propertyPath: m_LocalTransport
       value: 
       objectReference: {fileID: 0}
@@ -3830,7 +3835,7 @@ MonoBehaviour:
   Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
+  ActiveSceneSynchronization: 1
   SceneMigrationSynchronization: 0
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
@@ -5696,6 +5701,11 @@ PrefabInstance:
         type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3285459097
+      objectReference: {fileID: 0}
+    - target: {fileID: 3565561301179955727, guid: 7657662442c770a429781fa32abfe41d,
+        type: 3}
+      propertyPath: ActiveSceneSynchronization
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3565561301179955727, guid: 7657662442c770a429781fa32abfe41d,
         type: 3}
@@ -11601,6 +11611,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_StartShowing
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1606159626221928334, guid: 95bd29654e15ad844be6210374a75967,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1713736141589046007, guid: 95bd29654e15ad844be6210374a75967,
         type: 3}
