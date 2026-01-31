@@ -1,27 +1,36 @@
 using System.Collections.Generic;
+using NUnit.Framework;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Enemy : MonoBehaviour
+public class Enemy : NetworkBehaviour
 {
     public int damage = 5;
     public float attackSpeed = 3f;
     public float attackRange = 2f;
     public float switchTargetRange = 10;
+    public LayerMask losMask;
+    public bool los;
     public NavMeshAgent agent;
     public GameObject curTarget;
-    public GameObject[] allTargets;
 
     public void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        allTargets = GameObject.FindGameObjectsWithTag("Player");
-        curTarget = GetClosestPlayerInRange();
     }
 
     public void Update()
     {
-        if(Vector3.Distance(transform.position, curTarget.transform.position) > switchTargetRange)
+        if(!IsServer)
+            return;
+        if(curTarget == null)
+        {
+            curTarget = GetClosestPlayerInRange();
+            agent.SetDestination(curTarget.transform.position);
+        }
+        //if(agent.remainingDistance)
+        if(agent.remainingDistance > switchTargetRange)
         {
             curTarget = GetClosestPlayerInRange();
         }
@@ -31,14 +40,15 @@ public class Enemy : MonoBehaviour
     {
         GameObject closestPlayer = null;
         float compDistance = 10000;
-        foreach(GameObject go in allTargets)
+        for(int x = 0; x < NetworkManager.Singleton.ConnectedClients.Count; x++)
         {
-            float distance = Vector3.Distance(transform.position, go.transform.position);
-            Debug.Log(go.name + " is " + distance + " units away");
+            ulong id = NetworkManager.Singleton.ConnectedClientsIds[x];
+            agent.SetDestination(NetworkManager.Singleton.ConnectedClients[id].PlayerObject.transform.position);
+            float distance = agent.remainingDistance;
             if(distance < compDistance && distance < switchTargetRange)
             {
                 compDistance = distance;
-                closestPlayer = go;
+                closestPlayer = NetworkManager.Singleton.ConnectedClients[id].PlayerObject.gameObject;
             }
         }
         if(closestPlayer == null)
@@ -50,13 +60,15 @@ public class Enemy : MonoBehaviour
     {
         GameObject closestPlayer = null;
         float compDistance = 10000;
-        foreach(GameObject go in allTargets)
+        for(int x = 0; x < NetworkManager.Singleton.ConnectedClients.Count; x++)
         {
-            float distance = Vector3.Distance(transform.position, go.transform.position);
+            ulong id = NetworkManager.Singleton.ConnectedClientsIds[x];
+            agent.SetDestination(NetworkManager.Singleton.ConnectedClients[id].PlayerObject.transform.position);
+            float distance = agent.remainingDistance;
             if(distance < compDistance)
             {
                 compDistance = distance;
-                closestPlayer = go;
+                closestPlayer = NetworkManager.Singleton.ConnectedClients[id].PlayerObject.gameObject;
             }
         }
         return closestPlayer;

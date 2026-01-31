@@ -68,7 +68,8 @@ public abstract class GunBase : NetworkBehaviour
         FireServerRpc(muzzle.position, muzzle.forward);
     }
 
-    [ServerRpc]
+
+    [ServerRpc(RequireOwnership = false)]
     private void FireServerRpc(Vector3 origin, Vector3 dir, ServerRpcParams rpc = default)
     {
 
