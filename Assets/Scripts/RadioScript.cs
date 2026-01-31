@@ -1,6 +1,8 @@
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.XR.Content.Interaction;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class RadioScript : NetworkBehaviour 
 {
@@ -8,11 +10,33 @@ public class RadioScript : NetworkBehaviour
     private bool activated;
     private bool completed;
 
-    public override void OnNetworkSpawn()
+    [SerializeField] private XRSimpleInteractable simpleInteractable;
+
+public override void OnNetworkSpawn()
+{
+    if (simpleInteractable != null)
     {
-        if (IsOwner)
-            knob.onValueChange.AddListener(_ => OnKnobTurned());
+        simpleInteractable.activated.AddListener(OnActivated); 
     }
+    
+    if (IsOwner && knob != null)
+        knob.onValueChange.AddListener(_ => OnKnobTurned()); 
+}
+
+private void OnActivated(ActivateEventArgs args)
+{
+    NetworkObject.RequestOwnership();
+}
+
+public override void OnNetworkDespawn()
+{
+    if (simpleInteractable != null)
+        simpleInteractable.activated.RemoveListener(OnActivated);
+    
+    if (IsOwner && knob != null)
+        knob.onValueChange.RemoveListener(_ => OnKnobTurned());
+}
+
 
     public void TogglePower() 
     {
@@ -48,9 +72,5 @@ public class RadioScript : NetworkBehaviour
     
     }
 
-    public override void OnNetworkDespawn()
-    {
-        if (IsOwner && knob != null)
-            knob.onValueChange.RemoveListener(_ => OnKnobTurned());
-    }
+
 }
