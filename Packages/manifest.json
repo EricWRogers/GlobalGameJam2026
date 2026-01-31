@@ -17,6 +17,7 @@
     "com.unity.services.multiplayer": "2.0.0",
     "com.unity.services.vivox": "16.9.0",
     "com.unity.shadergraph": "17.3.0",
+    "com.unity.visualeffectgraph": "17.3.0",
     "com.unity.xr.androidxr-openxr": "1.1.0",
     "com.unity.xr.arfoundation": "6.3.2",
     "com.unity.xr.core-utils": "2.5.3",
