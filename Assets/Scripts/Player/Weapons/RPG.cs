@@ -7,7 +7,6 @@ public class RPG : GunBase
        // RPG-specific shooting logic (e.g., launching a rocket projectile)
        Debug.Log("RPG Fired!");
 
-       // Call base shooting logic if needed
-       base.Shoot();
+
    }
 }
