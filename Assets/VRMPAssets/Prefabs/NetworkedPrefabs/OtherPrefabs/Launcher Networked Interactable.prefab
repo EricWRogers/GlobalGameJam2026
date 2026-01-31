@@ -487,6 +487,8 @@ MonoBehaviour:
   m_StartingHoverFilters: []
   m_StartingSelectFilters: []
   m_StartingInteractionStrengthFilters: []
+  m_AutoFindParentInteractableInHierarchy: 0
+  m_ParentInteractableObject: {fileID: 0}
   m_AttachTransform: {fileID: 4166993141281424571}
   m_SecondaryAttachTransform: {fileID: 0}
   m_UseDynamicAttach: 0
