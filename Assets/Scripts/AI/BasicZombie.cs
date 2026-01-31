@@ -7,35 +7,34 @@ public class BasicZombie : Enemy
 {
     private float m_curDist;
     private float m_attackTimer;
+    public Animator anim;
     new void Update()
     {
-
+        if(!m_serverIsReady) return;
+        if(curTarget == null)
+        {
+            curTarget = GetClosestPlayerInRange();
+        }
         base.Update();
         agent.SetDestination(curTarget.transform.position);
         m_curDist = agent.remainingDistance;
         Vector3 dir = curTarget.transform.position - transform.position;
-        los = Physics.Raycast(transform.position, dir, losMask) ? true : false;
-        if(m_curDist <= attackRange && los)
+        //los = Physics.Raycast(transform.position, dir, losMask) ? true : false;
+        if(m_curDist <= attackRange)
         {
-            m_attackTimer -= Time.deltaTime;
             agent.isStopped = true;
-            if(m_attackTimer <= 0)
-            {
-                Attack();
-                m_attackTimer = attackSpeed;
-            }
-            //play attack animation and call attack when needed in animation
+            anim.SetBool("Attacking", true);
         }
         else
         {
-            agent.isStopped = false;
+            anim.SetBool("Attacking", false);
         }
     }
 
     public void Attack()
     {
         Debug.Log("attack");
-        if(m_curDist <= attackRange && los)
+        if(m_curDist <= attackRange)
         {
             ulong id = curTarget.GetComponent<NetworkObject>().OwnerClientId;
 
@@ -45,13 +44,13 @@ public class BasicZombie : Enemy
                     TargetClientIds = new ulong[] { id },
                 }
             };
-            DealDamageClientRPC(id, clientRpcParams);
+            DealDamageClientRpc(id, clientRpcParams);
         }
     }
 
 
 [ClientRpc]
-    public void DealDamageClientRPC(ulong _id, ClientRpcParams rpcParams = default)
+    public void DealDamageClientRpc(ulong _id, ClientRpcParams rpcParams = default)
     {
         NetworkManager.Singleton.ConnectedClients[_id].PlayerObject.GetComponent<Health>().TakeDamage(damage);
 

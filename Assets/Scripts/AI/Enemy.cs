@@ -15,6 +15,14 @@ public class Enemy : NetworkBehaviour
     public NavMeshAgent agent;
     public GameObject curTarget;
 
+    public bool m_serverIsReady = false;
+
+    public override void OnNetworkSpawn()
+    {
+        m_serverIsReady = true;
+
+    }
+
     public void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -22,12 +30,11 @@ public class Enemy : NetworkBehaviour
 
     public void Update()
     {
+        if(!m_serverIsReady) return;
         if(curTarget == null)
         {
             curTarget = GetClosestPlayerInRange();
-            //agent.SetDestination(curTarget.transform.position);
         }
-        //if(agent.remainingDistance)
         if(agent.remainingDistance > switchTargetRange)
         {
             curTarget = GetClosestPlayerInRange();
