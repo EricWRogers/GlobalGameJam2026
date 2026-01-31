@@ -932,34 +932,10 @@ MonoBehaviour:
       m_Calls: []
   m_SelectEntered:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6871076655207858197}
-        m_TargetAssemblyTypeName: AKGun, Assembly-CSharp
-        m_MethodName: SetTriggerHeld
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
   m_SelectExited:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6871076655207858197}
-        m_TargetAssemblyTypeName: AKGun, Assembly-CSharp
-        m_MethodName: SetTriggerHeld
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   m_FirstFocusEntered:
     m_PersistentCalls:
       m_Calls: []
@@ -1141,7 +1117,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7231109227704276350}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 398fc2e45b93f4b479a8520759861ac7, type: 3}
   m_Name: 
@@ -1198,19 +1174,7 @@ MonoBehaviour:
       m_Calls: []
   ActivateNetworkedEventAll:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 384941279473532825}
-        m_TargetAssemblyTypeName: NetworkProjectileLauncher, Assembly-CSharp
-        m_MethodName: FireLauncher
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   m_FoldoutValues: 010101
   m_AllowCollisionOwnershipExchange: 1
   m_MinExchangeVelocityMagitude: 0.025
@@ -1230,7 +1194,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   muzzle: {fileID: 5256239687508070692}
   damage: 20
-  fireRate: 10
+  fireRate: 4
   range: 100
   useAmmo: 0
   maxAmmo: 30
@@ -1241,7 +1205,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 769
   muzzleFlashVFX: {fileID: 6130875182695885756}
-  grabInteractable: {fileID: 0}
+  grabInteractable: {fileID: 455897827494601988}
   triggerHeld: 0
 --- !u!114 &4964825065032313618
 MonoBehaviour:
