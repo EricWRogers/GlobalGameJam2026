@@ -35,8 +35,18 @@ public class RadioScript : NetworkBehaviour
         }
     }
 
-    [ClientRpc] private void TogglePowerClientRpc() => activated = true;
-    [ClientRpc] private void CompleteRadioClientRpc() => completed = true;
+    [ClientRpc] private void TogglePowerClientRpc() {
+
+        Debug.Log("Radio activated!");
+
+        activated = true;
+    }
+    [ClientRpc] private void CompleteRadioClientRpc() { 
+        
+        Debug.Log("Radio completed!");
+        completed = true;
+    
+    }
 
     public override void OnNetworkDespawn()
     {
