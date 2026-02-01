@@ -14,22 +14,22 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LogansTestScene.unity
     guid: 0a8386ee15e95cb48ac00d64394383ac
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/GarrettTestScene.unity
     guid: ebdf354899ea923a282ffd1560d65bc5
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/GarrettTestV2.unity
     guid: da207b60f71ca399297df551b3956cbc
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/TrapTest.unity
     guid: 07360b1276660604898f633a6cff1ff0
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/BaseBallTrap.unity
     guid: 50c6ad0f5cf2c7b40895737f4def7218
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/LoganRPCTEST.unity
     guid: 4a41b935d918c65449847f44fad40c0c
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/NewGarrett.unity
     guid: f19469bfae84a5a40b8e77209d8b686c
   m_configObjects:
