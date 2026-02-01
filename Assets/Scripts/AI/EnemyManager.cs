@@ -14,15 +14,15 @@ public class EnemyManager : NetworkBehaviour
     public Transform[] spawnPos;
     public int amountKilled;
     public int startingHealth = 50;
-    private int m_amountSpawned;
-    private float m_timer;
+    public int m_amountSpawned;
+    public float m_timer;
     public bool m_serverIsReady = false;
     public int waveCounter;
     public float waveDelay;
     public float zombieCountIncreasePercentage = 15;
     public float zombieHealthIncreasePercentage = 30;
-    private float m_waveTimer;
-    private bool m_waveIsDone;
+    public float m_waveTimer;
+    public bool m_waveIsDone;
     public bool m_gameStart;
 
     void Awake()
@@ -51,7 +51,7 @@ public class EnemyManager : NetworkBehaviour
         {
             m_waveTimer -= Time.deltaTime;
         }
-        if(m_amountSpawned == amountToSpawn && m_waveTimer <= 0)//start of wave
+        if(m_amountSpawned < amountToSpawn && m_waveTimer <= 0 && waveCounter != 0)//start of wave
         {
             m_timer -= Time.deltaTime;
             if(m_timer <= 0)
@@ -84,8 +84,9 @@ public class EnemyManager : NetworkBehaviour
     }
     void SpawnEnemy(Vector3 _pos)
     {
+        Debug.Log("spawn");
         GameObject enemy = Instantiate(prefab, _pos, transform.rotation);
-        enemy.GetComponent<Health>().AddMaxHealth(startingHealth, true);
+        enemy.GetComponent<Health>().SetMaxHealth(startingHealth);
         float randomScale = Random.Range(.85f, 1.15f);
         enemy.transform.localScale = new Vector3(randomScale, randomScale, randomScale);
         enemy.GetComponent<NetworkObject>().Spawn();
