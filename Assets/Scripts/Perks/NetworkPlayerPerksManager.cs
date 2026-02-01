@@ -56,7 +56,7 @@ public class NetworkPlayerPerksManager : NetworkBehaviour
         activePerks.RemoveAt(0);
     }
 
-    private void RemovePerk(TypeOfPerks perk)
+    public void RemovePerk(TypeOfPerks perk)
     {
         switch (perk)
         {
