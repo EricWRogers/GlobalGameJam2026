@@ -72,7 +72,7 @@ public class EnemyManager : NetworkBehaviour
             waveCounter++;
             if(waveCounter != 1)
             {
-                startingHealth += (int)(startingHealth * (zombieHealthIncreasePercentage/100));
+                //startingHealth += (int)(startingHealth * (zombieHealthIncreasePercentage/100));
                 amountToSpawn += (int)(amountToSpawn * (zombieCountIncreasePercentage/100));
             }
             m_amountSpawned = 0;
@@ -86,7 +86,7 @@ public class EnemyManager : NetworkBehaviour
     {
         Debug.Log("spawn");
         GameObject enemy = Instantiate(prefab, _pos, transform.rotation);
-        enemy.GetComponent<Health>().SetMaxHealth(startingHealth);
+        //enemy.GetComponent<Health>().SetMaxHealth(startingHealth);
         float randomScale = Random.Range(.85f, 1.15f);
         enemy.transform.localScale = new Vector3(randomScale, randomScale, randomScale);
         enemy.GetComponent<NetworkObject>().Spawn();
