@@ -65,7 +65,7 @@ public abstract class GunBase : NetworkBehaviour
         triggerHeld = false;  // trigger released
     }
 
-    void Update()
+    public  void Update()
     {
         // Owner-only firing logic
         if (!IsOwner || !triggerHeld) return;
