@@ -142,13 +142,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3005572374
-  InScenePlacedSourceGlobalObjectIdHash: 0
+  GlobalObjectIdHash: 2622442521
+  InScenePlacedSourceGlobalObjectIdHash: 2622442521
   DeferredDespawnTick: 0
   Ownership: 8
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
+  ActiveSceneSynchronization: 1
   SceneMigrationSynchronization: 0
   SpawnWithObservers: 1
   DontDestroyWithOwner: 1
@@ -177,12 +177,17 @@ MonoBehaviour:
   - {fileID: 4637271797585110404}
   - {fileID: 3267572456492973244}
   amountKilled: 0
-  startingHealth: 100
+  startingHealth: 50
+  m_amountSpawned: 0
+  m_timer: 0
   m_serverIsReady: 0
   waveCounter: 0
-  waveDelay: 5
-  zombieCountIncreasePercentage: 15
-  zombieHealthIncreasePercentage: 30
+  waveDelay: 10
+  zombieCountIncreasePercentage: 10
+  zombieHealthIncreasePercentage: 10
+  m_waveTimer: 0
+  m_waveIsDone: 0
+  m_gameStart: 0
 --- !u!1 &6493245130735822705
 GameObject:
   m_ObjectHideFlags: 0
