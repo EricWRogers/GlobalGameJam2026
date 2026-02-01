@@ -169,7 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyManager
   ShowTopMostFoldoutHeaderGroup: 1
   prefab: {fileID: 3443491650810260074, guid: f7352ccdde3580ec1bbba8a413ef7759, type: 3}
-  amountToSpawn: 5
+  amountToSpawn: 10
   spawnTimer: 1
   spawnPos:
   - {fileID: 4988201124479476410}
@@ -184,7 +184,7 @@ MonoBehaviour:
   waveCounter: 0
   waveDelay: 10
   zombieCountIncreasePercentage: 10
-  zombieHealthIncreasePercentage: 10
+  zombieHealthIncreasePercentage: 5
   m_waveTimer: 0
   m_waveIsDone: 0
   m_gameStart: 0
