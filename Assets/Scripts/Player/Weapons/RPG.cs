@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using XRMultiplayer;
 
 public class RPG : GunBase
 {
@@ -9,7 +11,16 @@ public class RPG : GunBase
     GameObject proj;
     private bool rocketLoaded = false;
 
+    readonly List<RocketProjectile> m_ProjectileQueue = new();
+
+    private Rocket_Pool m_rocketPool;
+
     [SerializeField] private GameObject rocketPrefab;
+
+        void Awake()
+    {
+        m_rocketPool = FindFirstObjectByType<Rocket_Pool>();
+    }
 
     override public void OnNetworkSpawn()
     {
@@ -22,8 +33,25 @@ public class RPG : GunBase
     protected override void ShootGun(Vector3 origin, Vector3 dir)
     {
     
-        // Optional: Give it initial velocity
-        proj.GetComponent<RocketProjectile>().StartRocket();
+        GameObject newObject = m_rocketPool.GetItem();
+        if (!newObject.TryGetComponent(out RocketProjectile projectile))
+            {
+                Debug.Log("RocketProjectile component not found on rocket object.");
+                return;
+            }
+        projectile.transform.SetPositionAndRotation(rocketSpawnPoint.position, rocketSpawnPoint.rotation);
+        projectile.Setup(IsOwner, OnProjectileDestroy);
+        
+
+         if (newObject.TryGetComponent(out Rigidbody rigidBody))
+        {
+            rigidBody.isKinematic = true;
+            rigidBody.isKinematic = false;
+            Vector3 force = dir * projectileSpeed;
+            rigidBody.AddForce(force);
+        }
+        Debug.Log("Fired RPG Rocket");
+        m_ProjectileQueue.Add(projectile);
         
         rocketLoaded = false;
     }
@@ -31,25 +59,24 @@ public class RPG : GunBase
     new void Update()
     {
         base.Update();
-        if (!rocketLoaded && currentAmmo <=0 && IsOwner)
-        {
-            Debug.Log("Reloading Rocket Launcher");
-            ReloadRocketLauncher();
-        }
 
 
     }
 
 
+
     void ReloadRocketLauncher()
     {
-        Debug.Log("ReloadRocketLauncher  INside");
-        currentAmmo = maxAmmo;
-        proj = Instantiate(rocketPrefab, rocketSpawnPoint);
-        Debug.Log("Instantiated Rocket Prefab");
-        proj.GetComponent<NetworkObject>().Spawn();
-        Debug.Log("Spawned Rocket Network Object");
-        rocketLoaded = true;
-        Debug.Log("Rocket Loaded");
+
+    }
+
+
+        void OnProjectileDestroy(RocketProjectile projectile)
+    {
+        if (m_ProjectileQueue.Contains(projectile))
+        {
+            m_ProjectileQueue.Remove(projectile);
+        }
+        m_rocketPool.ReturnItem(projectile.gameObject);
     }
 }
