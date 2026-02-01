@@ -25,7 +25,7 @@ public class ElectricTrapEditorHelper : MonoBehaviour
         parentPos = midPoint;
         midPoint.y -= 3;
 
-        Debug.Log("Mid Point: " + midPoint);
+        //Debug.Log("Mid Point: " + midPoint);
 
         // ray cast toward Pos1 and find new Pos1
         {
