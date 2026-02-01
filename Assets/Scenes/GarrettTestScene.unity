@@ -4785,60 +4785,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BasicZom
       objectReference: {fileID: 0}
-    - target: {fileID: 3443491650810260074, guid: f7352ccdde3580ec1bbba8a413ef7759,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3853359062549353944, guid: f7352ccdde3580ec1bbba8a413ef7759,
-        type: 3}
-      propertyPath: outOfHealthEvent.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3853359062549353944, guid: f7352ccdde3580ec1bbba8a413ef7759,
-        type: 3}
-      propertyPath: outOfHealthEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3853359062549353944, guid: f7352ccdde3580ec1bbba8a413ef7759,
-        type: 3}
-      propertyPath: outOfHealthEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1635932866}
-    - target: {fileID: 3853359062549353944, guid: f7352ccdde3580ec1bbba8a413ef7759,
-        type: 3}
-      propertyPath: outOfHealthEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3853359062549353944, guid: f7352ccdde3580ec1bbba8a413ef7759,
-        type: 3}
-      propertyPath: outOfHealthEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Dead
-      objectReference: {fileID: 0}
-    - target: {fileID: 3853359062549353944, guid: f7352ccdde3580ec1bbba8a413ef7759,
-        type: 3}
-      propertyPath: outOfHealthEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: BasicZombie, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 3853359062549353944, guid: f7352ccdde3580ec1bbba8a413ef7759,
-        type: 3}
-      propertyPath: outOfHealthEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     - target: {fileID: 4588054353728195637, guid: f7352ccdde3580ec1bbba8a413ef7759,
         type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3759482490
-      objectReference: {fileID: 0}
-    - target: {fileID: 6405405130573943495, guid: f7352ccdde3580ec1bbba8a413ef7759,
-        type: 3}
-      propertyPath: decayDelay
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6405405130573943495, guid: f7352ccdde3580ec1bbba8a413ef7759,
-        type: 3}
-      propertyPath: deadOffset.y
-      value: 0.4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -12845,18 +12795,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Id: 094023fd-6a0f-491e-b88d-89fb5ccdddd4
---- !u!114 &1635932866 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6405405130573943495, guid: f7352ccdde3580ec1bbba8a413ef7759,
-    type: 3}
-  m_PrefabInstance: {fileID: 664767389}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1196bfea51c083e9800a09d93c2264a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BasicZombie
 --- !u!1 &1642295638
 GameObject:
   m_ObjectHideFlags: 0
