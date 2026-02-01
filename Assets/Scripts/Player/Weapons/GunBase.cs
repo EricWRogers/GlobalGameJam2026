@@ -77,10 +77,11 @@ public abstract class GunBase : NetworkBehaviour
     {
         // Owner-only firing logic
         if (!IsOwner || !triggerHeld) return;
-        TryFire();
+        TryFireRpc();
     }
 
-    public void TryFire()
+    [Rpc(SendTo.Everyone)]
+    public void TryFireRpc()
     {
         // Rate limiting FIRST
         if (Time.time < nextFireTime) return;
@@ -108,7 +109,6 @@ public abstract class GunBase : NetworkBehaviour
         FireEffectsRpc(origin, dir);
     }
 
-    [Rpc(SendTo.Everyone)]
     private void FireEffectsRpc(Vector3 origin, Vector3 dir)
     {
         Debug.Log("Firing effects RPC");
