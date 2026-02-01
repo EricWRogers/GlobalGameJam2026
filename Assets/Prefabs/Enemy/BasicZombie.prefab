@@ -95,7 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3759482490
+  GlobalObjectIdHash: 3210582753
   InScenePlacedSourceGlobalObjectIdHash: 3210582753
   DeferredDespawnTick: 0
   Ownership: 8
@@ -136,6 +136,9 @@ MonoBehaviour:
   m_isdead: 0
   decayDelay: 3
   deadOffset: {x: 0, y: 0.4, z: 0}
+  modelRenderer: {fileID: 6205224118014452882}
+  hurtColor: {r: 0, g: 0, b: 0, a: 0}
+  flashTime: 0
 --- !u!114 &3853359062549353944
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1185,3 +1188,9 @@ MonoBehaviour:
       Synchronize: 1
       ParameterType: 4
   AnimatorParametersExpanded: 0
+--- !u!137 &6205224118014452882 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 1256421902739032012, guid: d9d3214188bfb9441a760bc69fb677e9,
+    type: 3}
+  m_PrefabInstance: {fileID: 5148414153789530974}
+  m_PrefabAsset: {fileID: 0}
