@@ -1193,8 +1193,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AKGun
   ShowTopMostFoldoutHeaderGroup: 1
   muzzle: {fileID: 5256239687508070692}
-  damage: 20
-  fireRate: 4
+  damage: 5
+  fireRate: 2
   range: 100
   useAmmo: 0
   maxAmmo: 30
