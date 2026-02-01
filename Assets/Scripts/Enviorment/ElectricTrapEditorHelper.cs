@@ -23,7 +23,7 @@ public class ElectricTrapEditorHelper : MonoBehaviour
         
         Vector3 midPoint = transform.parent.position;//(Pos1.position + Pos4.position) * 0.5f;
         parentPos = midPoint;
-        midPoint.y -= 3;
+        midPoint.y -= 2;
 
         //Debug.Log("Mid Point: " + midPoint);
 
