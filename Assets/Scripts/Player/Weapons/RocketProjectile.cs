@@ -1,12 +1,13 @@
 using System;
 using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 namespace XRMultiplayer
 {
     /// <summary>
     /// Represents a projectile in the game.
     /// </summary>
-    public class RocketProjectile : MonoBehaviour
+    public class RocketProjectile : NetworkBehaviour
     {
         /// <summary>
         /// The trail renderer for the projectile.
@@ -85,7 +86,7 @@ namespace XRMultiplayer
         /// <inheritdoc/>
         private void FixedUpdate()
         {
-            if (!m_LocalPlayerProjectile || m_HasHitTarget) return;
+            if (m_HasHitTarget) return;
             if (Physics.Linecast(m_PrevPos, transform.position + transform.right * 0.5f, out m_Hit, hitmask))
             {
                 if (m_Hit.collider.isTrigger == false)
@@ -125,6 +126,7 @@ namespace XRMultiplayer
                 }
             }
             Invoke("ResetProjectile", 2.5f);
+            FireEffectsRpc(position);
         }
 
         void CheckForInteractableHit(Transform t)
@@ -135,6 +137,14 @@ namespace XRMultiplayer
                 networkPhysicsInteractable.RequestOwnership();
             }
         }
+
+        [Rpc(SendTo.Everyone)]
+        private void FireEffectsRpc(Vector3 origin)
+    {
+        Debug.Log("Firing effects RPC");
+        if (IsOwner) return;
+            ExplosionDamage(origin);
+    }
 
 
 

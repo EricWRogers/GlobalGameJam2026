@@ -68,7 +68,8 @@ public class BasicZombie : Enemy
             }
             if(transform.position == m_deadPos)
             {
-                Destroy(this.gameObject);
+                NetworkObject.Despawn();
+                //Destroy(this.gameObject);
             }
         }
     }
@@ -146,14 +147,19 @@ public void DealDamageRpc(ulong targetClientId)
     health.TakeDamage(damage);
 }
 
+    
     public void Dead()
     {
         if(!IsOwner) return;    
+        DeadRpc();
+    }
+    [Rpc(SendTo.Everyone)]
+    public void DeadRpc()
+    {
         EnemyManager.Instance.amountKilled++;
         m_isdead = true;
         m_deadPos = transform.position - deadOffset;
         anim.SetBool("Dead", true);
-        
     }
     public void FlashRed()
     {
