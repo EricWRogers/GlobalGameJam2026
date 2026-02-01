@@ -8,6 +8,10 @@ public class BasicZombie : Enemy
     private float m_curDist;
     private float m_attackTimer;
     public Animator anim;
+
+    public bool m_isdead;
+    public float decayDelay;
+    public Vector3 deadOffset;
     new void Update()
     {
         if(!m_serverIsReady) return;
@@ -28,6 +32,15 @@ public class BasicZombie : Enemy
         else
         {
             anim.SetBool("Attacking", false);
+        }
+        if (m_isdead)
+        {
+            decayDelay -= Time.deltaTime;
+            float speed = 5 * Time.deltaTime;
+            if(decayDelay <= 0)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, transform.position - deadOffset, speed);
+            }
         }
     }
 
@@ -54,5 +67,14 @@ public class BasicZombie : Enemy
     {
         NetworkManager.Singleton.ConnectedClients[_id].PlayerObject.GetComponent<Health>().TakeDamage(damage);
 
+    }
+
+    public void Dead()
+    {
+        m_isdead = true;
+        GetComponent<CapsuleCollider>().enabled = false;
+        agent.enabled = false;
+        anim.SetBool("Dead", true);
+        
     }
 }
