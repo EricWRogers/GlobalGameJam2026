@@ -5,63 +5,114 @@ using XRMultiplayer;
 
 public class PerkBottle : NetworkBehaviour
 {
-    [Header("Perk Data")]
     public PerkData perkData;
 
     [Header("Visuals")]
     [SerializeField] private Renderer bottleRenderer;
-    [SerializeField] private ParticleSystem drinkParticles;
+    [Header("Particles")]
+    [SerializeField] private GameObject jug;
+    [SerializeField] private GameObject revive;
+    [SerializeField] private GameObject doubleTap;
 
-    private bool consumed;
+    private Dictionary<NetworkPlayerPerksManager.TypeOfPerks, ParticleSystem[]> perkParticles;
+
+    private bool isEquipped;
+    private PlayerPerkSocket currentSocket;
     private PoolerProjectiles pool;
 
-    /// <summary>
-    /// Called by the PerkMachine after pulling this object from the pool
-    /// </summary>
+    private void Awake()
+    {
+        perkParticles = new Dictionary<NetworkPlayerPerksManager.TypeOfPerks, ParticleSystem[]>
+        {
+            {
+                NetworkPlayerPerksManager.TypeOfPerks.Jug,
+                jug.GetComponentsInChildren<ParticleSystem>(true)
+            },
+            {
+                NetworkPlayerPerksManager.TypeOfPerks.Revive,
+                revive.GetComponentsInChildren<ParticleSystem>(true)
+            },
+            {
+                NetworkPlayerPerksManager.TypeOfPerks.DoubleTap,
+                doubleTap.GetComponentsInChildren<ParticleSystem>(true)
+            }
+        };
+
+        DisableAllParticleGroups();
+    }
+
     public void Initialize(PerkData data, PoolerProjectiles pooler)
     {
         perkData = data;
         pool = pooler;
-        consumed = false;
-
-        bottleRenderer.enabled = true;
         bottleRenderer.material = perkData.perkMaterial;
+
+        isEquipped = false;
+        currentSocket = null;
+
+        DisableAllParticleGroups();
+
+        GameObject activeGroup = GetParticleGroupForPerk();
+        if (activeGroup != null)
+            activeGroup.SetActive(true);
+        }
+
+    public void Equip(PlayerPerkSocket socket)
+    {
+        isEquipped = true;
+        currentSocket = socket;
+
+        transform.SetParent(socket.SnapPoint);
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
+
+        PlayParticles();
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void Unequip()
     {
-        // Server authoritative consumption
-        if (!IsServer || consumed)
+        isEquipped = false;
+        currentSocket = null;
+
+        transform.SetParent(null);
+        StopParticles();
+    }
+
+    private void DisableAllParticleGroups()
+    {
+        jug.SetActive(false);
+        revive.SetActive(false);
+        doubleTap.SetActive(false);
+    }
+
+    private GameObject GetParticleGroupForPerk()
+    {
+        return perkData.perkType switch
+        {
+            NetworkPlayerPerksManager.TypeOfPerks.Jug => jug,
+            NetworkPlayerPerksManager.TypeOfPerks.Revive => revive,
+            NetworkPlayerPerksManager.TypeOfPerks.DoubleTap => doubleTap,
+            _ => null
+        };
+    }
+
+    private void PlayParticles()
+    {
+        if (!perkParticles.TryGetValue(perkData.perkType, out var systems))
             return;
 
-        // VR head-based interaction
-        if (!other.CompareTag("PlayerHead"))
+        foreach (var ps in systems)
+            ps.Play(true);
+    }
+
+    private void StopParticles()
+    {
+        if (!perkParticles.TryGetValue(perkData.perkType, out var systems))
             return;
 
-        NetworkPlayerPerksManager playerPerks =
-            other.GetComponentInParent<NetworkPlayerPerksManager>();
-
-        if (playerPerks == null)
-            return;
-
-        consumed = true;
-
-        playerPerks.TryAddPerk(perkData.perkType);
-
-        PlayDrinkEffectsClientRpc();
-        DespawnBottle();
+        foreach (var ps in systems)
+            ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
     }
 
-    private void DespawnBottle()
-    {
-        // Despawn without destroying so pooling still works
-        NetworkObject.Despawn(false);
-        pool.ReturnItem(gameObject);
-    }
-
-    [ClientRpc]
-    private void PlayDrinkEffectsClientRpc()
-    {
-        drinkParticles.Play();
-    }
+    public bool IsEquipped => isEquipped;
 }

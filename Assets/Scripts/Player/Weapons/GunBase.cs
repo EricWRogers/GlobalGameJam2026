@@ -28,6 +28,8 @@ public abstract class GunBase : NetworkBehaviour
     public XRGrabInteractable grabInteractable;
     public bool triggerHeld = false;
 
+    public AudioSource gunAudioSource;
+
     public void SetTriggerHeld(bool held)
     {
         triggerHeld = held;
@@ -93,6 +95,9 @@ public abstract class GunBase : NetworkBehaviour
         // Owner plays effects locally
         MuzzleFlash();
 
+        if(gunAudioSource != null)
+            gunAudioSource.Play();
+
         // Broadcast effects to ALL other clients
         FireEffectsRpc(origin, dir);
     }
@@ -109,6 +114,9 @@ public abstract class GunBase : NetworkBehaviour
         Debug.Log("Playing Muzzle Flash VFX");  
         if (muzzleFlashVFX != null)
             muzzleFlashVFX.Play();
+
+        if(!IsOwner && gunAudioSource != null)
+            gunAudioSource.Play();
     }
     
     protected abstract void ShootGun(Vector3 origin, Vector3 dir);

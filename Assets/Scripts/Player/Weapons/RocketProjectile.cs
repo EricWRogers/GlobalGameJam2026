@@ -44,8 +44,12 @@ namespace XRMultiplayer
         public GameObject explosionEffect;
         bool hitSomthing = false;
 
+        public GameObject rocketModel;
+
         public LayerMask enemyMask;
        public LayerMask hitmask;
+
+       public AudioSource explosionAudioSource;
         
 
 
@@ -62,7 +66,7 @@ namespace XRMultiplayer
                 TryGetComponent(out m_Rigidybody);
             }
             hitSomthing = false;
-
+            rocketModel.SetActive(true);
             m_LocalPlayerProjectile = localPlayer;
             m_PrevPos = transform.position;
             if (returnToPoolAction != null)
@@ -82,10 +86,11 @@ namespace XRMultiplayer
         private void FixedUpdate()
         {
             if (!m_LocalPlayerProjectile || m_HasHitTarget) return;
-            if (Physics.Linecast(m_PrevPos, transform.position, out m_Hit, hitmask))
+            if (Physics.Linecast(m_PrevPos, transform.position + transform.right * 0.5f, out m_Hit, hitmask))
             {
                 if (m_Hit.collider.isTrigger == false)
                     ExplosionDamage(m_Hit.point);
+                
             }
             if(!hitSomthing)
                 transform.position += transform.right * projectileSpeed * Time.fixedDeltaTime;
@@ -94,29 +99,19 @@ namespace XRMultiplayer
         }
 
         /// <inheritdoc/>
-        void OnTriggerEnter(Collider other)
-        {
-            
-            if (!m_LocalPlayerProjectile) return;
-            if (other.isTrigger) return;
-            hitSomthing = true;
-            ExplosionDamage(transform.position);
-        }
-
-        void OnCollisionEnter(Collision collision)
-        {
-            
-            if (!m_LocalPlayerProjectile) return;
-            //CheckForInteractableHit(collision.transform);
-            ExplosionDamage(transform.position);
-
-        }
+        
 
 
 
         void ExplosionDamage(Vector3 position)
         {
+            hitSomthing = true;
             explosionEffect.SetActive(true);
+            Invoke("TurnOFfExplosionEffect", 1.5f);
+            rocketModel.SetActive(false);
+
+            if(explosionAudioSource != null)
+                explosionAudioSource.Play();
             RaycastHit[] hits = Physics.SphereCastAll(position, 5f, Vector3.up, 0f);
             foreach (RaycastHit hit in hits)
             {
@@ -129,7 +124,7 @@ namespace XRMultiplayer
                     }
                 }
             }
-            Invoke("ResetProjectile", 0.5f);
+            Invoke("ResetProjectile", 2.5f);
         }
 
         void CheckForInteractableHit(Transform t)
@@ -158,7 +153,14 @@ namespace XRMultiplayer
             StopAllCoroutines();
             m_OnReturnToPool?.Invoke(this);
         }
+
+        void TurnOFfExplosionEffect()
+        {
+            explosionEffect.SetActive(false);
+        }
+
     }
+    
 }
 
 
