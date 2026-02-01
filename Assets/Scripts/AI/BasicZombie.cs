@@ -12,34 +12,49 @@ public class BasicZombie : Enemy
     public bool m_isdead;
     public float decayDelay;
     public Vector3 deadOffset;
+    private Vector3 m_deadPos;
+    new void Start()
+    {
+        base.Start();
+    }
     new void Update()
     {
         if(!m_serverIsReady) return;
-        if(curTarget == null)
+        if (!m_isdead)
         {
-            curTarget = GetClosestPlayerInRange();
+            if(curTarget == null)
+            {
+                curTarget = GetClosestPlayerInRange();
+            }
+            base.Update();
+            agent.SetDestination(curTarget.transform.position);
+            m_curDist = agent.remainingDistance;
+            Vector3 dir = curTarget.transform.position - transform.position;
+            //los = Physics.Raycast(transform.position, dir, losMask) ? true : false;
+            if(m_curDist <= attackRange)
+            {
+                agent.isStopped = true;
+                anim.SetBool("Attacking", true);
+            }
+            else
+            {
+                anim.SetBool("Attacking", false);
+            }            
         }
-        base.Update();
-        agent.SetDestination(curTarget.transform.position);
-        m_curDist = agent.remainingDistance;
-        Vector3 dir = curTarget.transform.position - transform.position;
-        //los = Physics.Raycast(transform.position, dir, losMask) ? true : false;
-        if(m_curDist <= attackRange)
-        {
-            agent.isStopped = true;
-            anim.SetBool("Attacking", true);
-        }
-        else
-        {
-            anim.SetBool("Attacking", false);
-        }
+
         if (m_isdead)
         {
+            agent.enabled = false;
+            GetComponent<CapsuleCollider>().enabled = false;
             decayDelay -= Time.deltaTime;
-            float speed = 5 * Time.deltaTime;
+            float speed = 3 * Time.deltaTime;
             if(decayDelay <= 0)
             {
-                transform.position = Vector3.MoveTowards(transform.position, transform.position - deadOffset, speed);
+                transform.position = Vector3.MoveTowards(transform.position, m_deadPos, speed);
+            }
+            if(transform.position == m_deadPos)
+            {
+                Destroy(this.gameObject);
             }
         }
     }
@@ -72,8 +87,7 @@ public class BasicZombie : Enemy
     public void Dead()
     {
         m_isdead = true;
-        GetComponent<CapsuleCollider>().enabled = false;
-        agent.enabled = false;
+        m_deadPos = transform.position - deadOffset;
         anim.SetBool("Dead", true);
         
     }
