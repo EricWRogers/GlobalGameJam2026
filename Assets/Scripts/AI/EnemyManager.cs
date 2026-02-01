@@ -23,6 +23,7 @@ public class EnemyManager : NetworkBehaviour
     public float zombieHealthIncreasePercentage = 30;
     private float m_waveTimer;
     private bool m_waveIsDone;
+    public bool m_gameStart;
 
     void Awake()
     {
@@ -45,11 +46,12 @@ public class EnemyManager : NetworkBehaviour
     void Update()
     {
         if(!m_serverIsReady || !IsOwner) return;
+        if(!m_gameStart) return;
         if(m_waveTimer > 0)
         {
             m_waveTimer -= Time.deltaTime;
         }
-        if(m_amountSpawned <= amountToSpawn && m_waveTimer <= 0)//start of wave
+        if(m_amountSpawned == amountToSpawn && m_waveTimer <= 0)//start of wave
         {
             m_timer -= Time.deltaTime;
             if(m_timer <= 0)
@@ -68,8 +70,11 @@ public class EnemyManager : NetworkBehaviour
         {
             m_waveTimer = waveDelay;
             waveCounter++;
-            startingHealth += (int)(startingHealth * (zombieHealthIncreasePercentage/100));
-            amountToSpawn += (int)(amountToSpawn * (zombieCountIncreasePercentage/100));
+            if(waveCounter != 1)
+            {
+                startingHealth += (int)(startingHealth * (zombieHealthIncreasePercentage/100));
+                amountToSpawn += (int)(amountToSpawn * (zombieCountIncreasePercentage/100));
+            }
             m_amountSpawned = 0;
             amountKilled = 0;
 
@@ -84,5 +89,11 @@ public class EnemyManager : NetworkBehaviour
         float randomScale = Random.Range(.85f, 1.15f);
         enemy.transform.localScale = new Vector3(randomScale, randomScale, randomScale);
         enemy.GetComponent<NetworkObject>().Spawn();
+    }
+    [Rpc(SendTo.Everyone)]
+    public void StartGameRpc()
+    {
+        m_gameStart = true;
+        m_waveIsDone = true;
     }
 }
