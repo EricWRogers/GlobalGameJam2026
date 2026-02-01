@@ -12,11 +12,10 @@ public class AKGun : GunBase
 
         if(hitInfo.collider.tag == "Enemy")
         {
-            Debug.Log("Hit Enemy with AK");
+            
             Health enemyHealth = hitInfo.collider.GetComponent<Health>();
             if(enemyHealth != null)
             {
-                Debug.Log("Applying Damage to Enemy");
                 enemyHealth.TakeDamage((int)damage);
             }
         }

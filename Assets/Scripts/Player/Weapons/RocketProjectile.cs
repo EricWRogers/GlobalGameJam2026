@@ -6,12 +6,13 @@ public class RocketProjectile : NetworkBehaviour
     [SerializeField] float lifetime = 5f;
     [SerializeField] float speed = 50f;
     [SerializeField] LayerMask enemyMask;
+    public float radius = 5f;
+    public int explosionDamage = 30;
 
 
 
     void Start() 
     {
-        Destroy(gameObject, lifetime);
     }
 
     public void StartRocket()
@@ -29,7 +30,7 @@ public class RocketProjectile : NetworkBehaviour
         // Hit effects, damage logic here
         if (IsServer || IsHost) // Authoritative damage
         {
-           HitTarget(collision.gameObject);
+           DamageInExplosionSphere(collision.contacts[0].point, radius, explosionDamage);
         }
         NetworkObject.Despawn(); // Server can despawn
     }
