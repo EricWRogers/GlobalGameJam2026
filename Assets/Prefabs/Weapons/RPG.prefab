@@ -104,7 +104,7 @@ Transform:
   m_GameObject: {fileID: 8315997205002744982}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.84, y: 0.08, z: 0}
+  m_LocalPosition: {x: 3.37, y: 0.08, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -278,7 +278,7 @@ PrefabInstance:
     - target: {fileID: 9199602403423260430, guid: fe834b767f0d9e6419fcf5775d428045,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -515,7 +515,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2894410244
+  GlobalObjectIdHash: 2415161763
   InScenePlacedSourceGlobalObjectIdHash: 2415161763
   DeferredDespawnTick: 0
   Ownership: 1
@@ -674,7 +674,8 @@ MonoBehaviour:
   muzzleFlashVFX: {fileID: 2917230693139556996}
   grabInteractable: {fileID: 3346495151848619225}
   triggerHeld: 0
-  projectileSpeed: 1
+  gunAudioSource: {fileID: 0}
+  projectileSpeed: 15
   rocketSpawnPoint: {fileID: 4027897265902721171}
   rocketPrefab: {fileID: 8493037946262142551, guid: fac22fa5739f0d7438ea19d9981fe72c,
     type: 3}

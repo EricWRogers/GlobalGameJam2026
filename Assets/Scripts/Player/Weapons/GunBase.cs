@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.VFX;
@@ -21,6 +22,9 @@ public abstract class GunBase : NetworkBehaviour
     [SerializeField] protected LayerMask enemyMask;
     [SerializeField] protected LayerMask hitMask;
     [SerializeField] private VisualEffect muzzleFlashVFX;
+
+    public Rigidbody rb;
+    public float recoilForce = 5f;
     
     // Owner-only rate limiting
     protected float nextFireTime;
@@ -44,6 +48,8 @@ public abstract class GunBase : NetworkBehaviour
 
         grabInteractable.activated.AddListener(OnActivated);
         grabInteractable.deactivated.AddListener(OnDeactivated);
+        rb = GetComponent<Rigidbody>();
+        
         
     }
 
@@ -90,6 +96,7 @@ public abstract class GunBase : NetworkBehaviour
 
         // Owner does FULL authoritative firing (damage, raycast, etc.)
         ShootGun(origin, dir);
+        rb.AddForce(-dir * recoilForce, ForceMode.Impulse);
         
         // Owner plays effects locally
         MuzzleFlash();
