@@ -23,14 +23,12 @@ public class ElectricTrapEditorHelper : MonoBehaviour
         
         Vector3 midPoint = transform.parent.position;//(Pos1.position + Pos4.position) * 0.5f;
         parentPos = midPoint;
-        midPoint.y -= 2;
 
         //Debug.Log("Mid Point: " + midPoint);
 
         // ray cast toward Pos1 and find new Pos1
         {
-            Vector3 direction = Pos1.position - midPoint;
-            direction = direction.normalized;
+            Vector3 direction = -transform.parent.up;
 
             RaycastHit hit;
 
@@ -42,8 +40,7 @@ public class ElectricTrapEditorHelper : MonoBehaviour
 
         // ray cast toward Pos4 and find new Pos4
         {
-            Vector3 direction = Pos4.position - midPoint;
-            direction = direction.normalized;
+            Vector3 direction = transform.parent.up;
 
             RaycastHit hit;
 

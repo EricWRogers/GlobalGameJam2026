@@ -50,5 +50,13 @@ public class Health : MonoBehaviour
         currentHealth = totalHealth;
         onReviveEvent.Invoke();
     }
+    public void AddMaxHealth(int _amount, bool _giveMax)
+    {
+        totalHealth += _amount;
+        if (_giveMax)
+        {
+            currentHealth = totalHealth;
+        }
+    }
 
 }
