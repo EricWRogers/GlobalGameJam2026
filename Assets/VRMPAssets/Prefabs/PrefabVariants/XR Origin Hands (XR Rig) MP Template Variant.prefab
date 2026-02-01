@@ -5493,6 +5493,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 3855896990934856888}
+    - targetCorrespondingSourceObject: {fileID: 2218496723442559054, guid: d6878e1999eb4b44a9f5a263af86c185,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1553493296047881550}
     - targetCorrespondingSourceObject: {fileID: 657184242118504722, guid: d6878e1999eb4b44a9f5a263af86c185,
         type: 3}
       insertIndex: -1
@@ -5598,6 +5602,21 @@ MonoBehaviour:
   onReviveEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1553493296047881550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7174019212652907435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b8f91a808f5b3d4dbcdb95cabef0667, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkPlayerPerksManager
+  ShowTopMostFoldoutHeaderGroup: 1
+  increaseHealth: 20
+  playerHealth: {fileID: 3855896990934856888}
 --- !u!4 &7648409842563483903 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1684926014057179930, guid: d6878e1999eb4b44a9f5a263af86c185,
