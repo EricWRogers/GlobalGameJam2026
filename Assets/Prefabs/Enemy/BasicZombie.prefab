@@ -133,6 +133,9 @@ MonoBehaviour:
   curTarget: {fileID: 0}
   m_serverIsReady: 0
   anim: {fileID: 4409848796053122199}
+  m_isdead: 0
+  decayDelay: 3
+  deadOffset: {x: 0, y: 0.4, z: 0}
 --- !u!114 &3853359062549353944
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,7 +158,19 @@ MonoBehaviour:
       m_Calls: []
   outOfHealthEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6405405130573943495}
+        m_TargetAssemblyTypeName: BasicZombie, Assembly-CSharp
+        m_MethodName: Dead
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onReviveEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -1165,8 +1180,8 @@ MonoBehaviour:
       NameHash: -2123461723
       Synchronize: 1
       ParameterType: 4
-    - name: Blend
-      NameHash: 1784438316
+    - name: Dead
+      NameHash: 1293411866
       Synchronize: 1
-      ParameterType: 1
+      ParameterType: 4
   AnimatorParametersExpanded: 0
