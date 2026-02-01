@@ -12,65 +12,93 @@ public class RadioScript : NetworkBehaviour
 
     [SerializeField] private XRSimpleInteractable simpleInteractable;
 
-public override void OnNetworkSpawn()
-{
-    if (simpleInteractable != null)
+    public override void OnNetworkSpawn()
     {
-        simpleInteractable.activated.AddListener(OnActivated); 
-    }
-    
-    if (IsOwner && knob != null)
-        knob.onValueChange.AddListener(_ => OnKnobTurned()); 
-}
-
-private void OnActivated(ActivateEventArgs args)
-{
-    NetworkObject.RequestOwnership();
-}
-
-public override void OnNetworkDespawn()
-{
-    if (simpleInteractable != null)
-        simpleInteractable.activated.RemoveListener(OnActivated);
-    
-    if (IsOwner && knob != null)
-        knob.onValueChange.RemoveListener(_ => OnKnobTurned());
-}
-
-
-    public void TogglePower() 
-    {
-        if (!IsOwner) return;
-        activated = true;
-        Debug.Log("Radio activated!");
-        TogglePowerClientRpc();
-    }
-
-    private void OnKnobTurned()
-    {
-        if (!IsOwner || !activated) return;
-
-        if(knob.value == 1){
-
+        if (simpleInteractable != null)
+            simpleInteractable.activated.AddListener(_ => OnActivated());
         
-        completed = true;
-        Debug.Log("Radio completed!");
-        CompleteRadioClientRpc();
+        if (knob != null)
+            knob.onValueChange.AddListener(_ => OnKnobTurned()); 
+    }
+
+    public void OnActivated()
+    {
+        Debug.Log($"OnActivated called by ClientId: {OwnerClientId}");
+        
+        if (!activated)
+        {
+            activated = true;
+            Debug.Log("Radio activated! (local)");
+            
+            // Send to OTHER clients only (EXACTLY like NetworkedLight)
+            ClientRpcParams clientRpcParams = new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams
+                {
+                    TargetClientIds = GetOtherClientIds()
+                }
+            };
+            ActivateRadioClientRpc(clientRpcParams);
         }
     }
 
-    [ClientRpc] private void TogglePowerClientRpc() {
-
-        Debug.Log("Radio activated!");
-
+    [ClientRpc]
+    private void ActivateRadioClientRpc(ClientRpcParams clientRpcParams = default)
+    {
+        Debug.Log("Activate RPC received - turning radio ON");
         activated = true;
+        Debug.Log("Radio activated!");
     }
-    [ClientRpc] private void CompleteRadioClientRpc() { 
+
+    public void OnKnobTurned()
+    {
+        if (!activated) 
+        {
+            Debug.Log($"Knob turned to {knob.value} but radio not activated");
+            return;
+        }
         
-        Debug.Log("Radio completed!");
-        completed = true;
-    
+        Debug.Log($"Knob turned to: {knob.value}");
+        
+        ClientRpcParams clientRpcParams = new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams
+            {
+                TargetClientIds = GetOtherClientIds()
+            }
+        };
+        CheckKnobClientRpc(knob.value, clientRpcParams);
     }
 
+    [ClientRpc]
+    private void CheckKnobClientRpc(float knobValue, ClientRpcParams clientRpcParams = default)
+    {
+        Debug.Log($"CheckKnob RPC received: {knobValue}");
+        if (Mathf.Approximately(knobValue, 1f) && !completed)
+        {
+            completed = true;
+            Debug.Log("RADIO COMPLETED!");
+        }
+    }
+    
+    private ulong[] GetOtherClientIds()
+    {
+        var clients = NetworkManager.Singleton.ConnectedClients;
+        var otherClients = new System.Collections.Generic.List<ulong>();
+        
+        foreach (var client in clients)
+        {
+            if (client.Key != OwnerClientId) 
+                otherClients.Add(client.Key);
+        }
+        return otherClients.ToArray();
+    }
 
+    public override void OnNetworkDespawn()
+    {
+        if (simpleInteractable != null)
+            simpleInteractable.activated.RemoveListener(_ => OnActivated());
+        if (knob != null)
+            knob.onValueChange.RemoveListener(_ => OnKnobTurned());
+    }
 }
