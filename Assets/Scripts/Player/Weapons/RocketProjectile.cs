@@ -84,7 +84,8 @@ namespace XRMultiplayer
             if (!m_LocalPlayerProjectile || m_HasHitTarget) return;
             if (Physics.Linecast(m_PrevPos, transform.position, out m_Hit, hitmask))
             {
-                ExplosionDamage(m_Hit.point);
+                if (m_Hit.collider.isTrigger == false)
+                    ExplosionDamage(m_Hit.point);
             }
             if(!hitSomthing)
                 transform.position += transform.right * projectileSpeed * Time.fixedDeltaTime;
@@ -97,6 +98,7 @@ namespace XRMultiplayer
         {
             
             if (!m_LocalPlayerProjectile) return;
+            if (other.isTrigger) return;
             hitSomthing = true;
             ExplosionDamage(transform.position);
         }
