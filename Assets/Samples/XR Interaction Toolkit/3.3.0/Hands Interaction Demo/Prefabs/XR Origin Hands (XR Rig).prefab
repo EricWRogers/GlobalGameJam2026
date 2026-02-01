@@ -7713,10 +7713,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1618409027762335683, guid: 0dfe8d97202406e4b86e4a51f0805d40,
+        type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 642190654
+      objectReference: {fileID: 0}
     - target: {fileID: 4979799528267912743, guid: 0dfe8d97202406e4b86e4a51f0805d40,
         type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5544991105765335263, guid: 0dfe8d97202406e4b86e4a51f0805d40,
+        type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 539792788
       objectReference: {fileID: 0}
     - target: {fileID: 6821967783461365837, guid: 0dfe8d97202406e4b86e4a51f0805d40,
         type: 3}
