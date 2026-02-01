@@ -44,7 +44,7 @@ public class EnemyManager : NetworkBehaviour
     }
     void Update()
     {
-        if(!m_serverIsReady) return;
+        if(!m_serverIsReady || !IsOwner) return;
         if(m_waveTimer > 0)
         {
             m_waveTimer -= Time.deltaTime;
