@@ -55,7 +55,7 @@ namespace XRMultiplayer
             }
 
 
-            
+            m_LocalPlayerProjectile = localPlayer;
             m_PrevPos = transform.position;
             if (returnToPoolAction != null)
             {
@@ -90,15 +90,15 @@ namespace XRMultiplayer
         /// <inheritdoc/>
         void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Target"))
-            {
-                HitTarget(other.GetComponentInParent<Target>());
-            }
+            
+            if (!m_LocalPlayerProjectile) return;
+            //CheckForInteractableHit(other.transform);
+            ExplosionDamage(transform.position);
         }
 
         void OnCollisionEnter(Collision collision)
         {
-            Debug.Log("Rocket Projectile Collided");
+            
             if (!m_LocalPlayerProjectile) return;
             CheckForInteractableHit(collision.transform);
             ExplosionDamage(transform.position);

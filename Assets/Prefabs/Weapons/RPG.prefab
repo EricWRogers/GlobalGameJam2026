@@ -674,7 +674,7 @@ MonoBehaviour:
   muzzleFlashVFX: {fileID: 2917230693139556996}
   grabInteractable: {fileID: 3346495151848619225}
   triggerHeld: 0
-  projectileSpeed: 100
+  projectileSpeed: 50
   rocketSpawnPoint: {fileID: 4027897265902721171}
   rocketPrefab: {fileID: 8493037946262142551, guid: fac22fa5739f0d7438ea19d9981fe72c,
     type: 3}
