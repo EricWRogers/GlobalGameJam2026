@@ -7,98 +7,109 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 public class RadioScript : NetworkBehaviour 
 {
     [SerializeField] private XRKnob knob;
-    private bool activated;
-    private bool completed;
+    
+    
+    readonly NetworkVariable<bool> m_Activated = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    readonly NetworkVariable<bool> m_Completed = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     [SerializeField] private XRSimpleInteractable simpleInteractable;
 
     public override void OnNetworkSpawn()
     {
         if (simpleInteractable != null)
-            simpleInteractable.activated.AddListener(_ => OnActivated());
+            simpleInteractable.activated.AddListener(OnActivated);  
         
         if (knob != null)
-            knob.onValueChange.AddListener(_ => OnKnobTurned()); 
+            knob.onValueChange.AddListener(_ =>OnKnobTurned());  
+
+        m_Activated.OnValueChanged += (oldVal, newVal) => {
+            if (newVal)
+            {
+                Debug.Log("Radio activated (network)");
+            }
+        };
+
+        m_Completed.OnValueChanged += (oldVal, newVal) => {
+            if (newVal)
+            {
+                Debug.Log("RADIO COMPLETED! (network)");
+            }
+        };
     }
 
-    public void OnActivated()
+    public void OnActivated(ActivateEventArgs args)  
     {
-        Debug.Log($"OnActivated called by ClientId: {OwnerClientId}");
+        Debug.Log($"OnActivated called locally by ClientId: {NetworkManager.Singleton.LocalClientId}");
+
         
-        if (!activated)
+        if (!m_Activated.Value)  
+            ActivateOwnerRpc(NetworkManager.Singleton.LocalClientId);
+    }
+
+    
+    [Rpc(SendTo.Owner)]
+    void ActivateOwnerRpc(ulong clientId)
+    {
+        m_Activated.Value = true;
+        ActivateRpc(clientId);
+    }
+
+    
+    [Rpc(SendTo.Everyone)]
+    void ActivateRpc(ulong clientId)
+    {
+        if (clientId != NetworkManager.Singleton.LocalClientId)
         {
-            activated = true;
-            Debug.Log("Radio activated! (local)");
-            
-            // Send to OTHER clients only (EXACTLY like NetworkedLight)
-            ClientRpcParams clientRpcParams = new ClientRpcParams
-            {
-                Send = new ClientRpcSendParams
-                {
-                    TargetClientIds = GetOtherClientIds()
-                }
-            };
-            ActivateRadioClientRpc(clientRpcParams);
+            Debug.Log($"ActivateRpc received from {clientId}");
+            m_Activated.Value = true;
         }
     }
 
-    [ClientRpc]
-    private void ActivateRadioClientRpc(ClientRpcParams clientRpcParams = default)
+    public void OnKnobTurned()  
     {
-        Debug.Log("Activate RPC received - turning radio ON");
-        activated = true;
-        Debug.Log("Radio activated!");
-    }
-
-    public void OnKnobTurned()
-    {
-        if (!activated) 
+        if (!m_Activated.Value)
         {
             Debug.Log($"Knob turned to {knob.value} but radio not activated");
             return;
         }
-        
-        Debug.Log($"Knob turned to: {knob.value}");
-        
-        ClientRpcParams clientRpcParams = new ClientRpcParams
-        {
-            Send = new ClientRpcSendParams
-            {
-                TargetClientIds = GetOtherClientIds()
-            }
-        };
-        CheckKnobClientRpc(knob.value, clientRpcParams);
+
+        float value = knob.value;  
+        Debug.Log($"Knob turned to: {value}");
+
+
+        KnobChangedOwnerRpc(value, NetworkManager.Singleton.LocalClientId);
     }
 
-    [ClientRpc]
-    private void CheckKnobClientRpc(float knobValue, ClientRpcParams clientRpcParams = default)
+    [Rpc(SendTo.Owner)]
+    void KnobChangedOwnerRpc(float newValue, ulong clientId)
     {
-        Debug.Log($"CheckKnob RPC received: {knobValue}");
-        if (Mathf.Approximately(knobValue, 1f) && !completed)
+        if (newValue > .9f && !m_Completed.Value)
         {
-            completed = true;
-            Debug.Log("RADIO COMPLETED!");
+            m_Completed.Value = true;
+            Debug.Log("RADIO COMPLETED! (owner rpc)");
         }
+        KnobChangedRpc(newValue, clientId);
     }
-    
-    private ulong[] GetOtherClientIds()
+
+    [Rpc(SendTo.Everyone)]
+    void KnobChangedRpc(float newValue, ulong clientId)
     {
-        var clients = NetworkManager.Singleton.ConnectedClients;
-        var otherClients = new System.Collections.Generic.List<ulong>();
-        
-        foreach (var client in clients)
+        if (clientId != NetworkManager.Singleton.LocalClientId)
         {
-            if (client.Key != OwnerClientId) 
-                otherClients.Add(client.Key);
+            Debug.Log($"Knob change from {clientId}: {newValue}");
+            if (newValue > .9f && !m_Completed.Value)
+            {
+                m_Completed.Value = true;
+                Debug.Log("RADIO COMPLETED! (rpc)");
+            }
         }
-        return otherClients.ToArray();
     }
 
     public override void OnNetworkDespawn()
     {
         if (simpleInteractable != null)
-            simpleInteractable.activated.RemoveListener(_ => OnActivated());
+            simpleInteractable.activated.RemoveListener(OnActivated);
         if (knob != null)
-            knob.onValueChange.RemoveListener(_ => OnKnobTurned());
+            knob.onValueChange.RemoveListener(_ =>OnKnobTurned());
     }
 }
