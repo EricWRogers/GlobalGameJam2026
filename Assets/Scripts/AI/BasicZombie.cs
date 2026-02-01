@@ -96,6 +96,7 @@ public class BasicZombie : Enemy
 
     public void Dead()
     {
+        EnemyManager.Instance.amountKilled++;
         m_isdead = true;
         m_deadPos = transform.position - deadOffset;
         anim.SetBool("Dead", true);
