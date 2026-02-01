@@ -21,10 +21,11 @@ public class BasicZombie : Enemy
     new void Start()
     {
         base.Start();
+        if(!IsOwner) return;
     }
     new void Update()
     {
-        if(!m_serverIsReady) return;
+        if(!m_serverIsReady || !IsOwner) return;
         if (!m_isdead)
         {
             if(curTarget == null)
@@ -32,23 +33,26 @@ public class BasicZombie : Enemy
                 curTarget = GetClosestPlayerInRange();
             }
             base.Update();
-            agent.SetDestination(curTarget.transform.position);
-            m_curDist = agent.remainingDistance;
-            Vector3 dir = curTarget.transform.position - transform.position;
-            //los = Physics.Raycast(transform.position, dir, losMask) ? true : false;
-            if(m_curDist <= attackRange)
+            if (curTarget != null)
             {
-                agent.isStopped = true;
-                anim.SetBool("Attacking", true);
-            }
-            else
-            {
-                anim.SetBool("Attacking", false);
+                agent.SetDestination(curTarget.transform.position);
+                m_curDist = agent.remainingDistance;
+                Vector3 dir = curTarget.transform.position - transform.position;
+                //los = Physics.Raycast(transform.position, dir, losMask) ? true : false;
+                if(m_curDist <= attackRange)
+                {
+                    agent.isStopped = true;
+                    anim.SetBool("Attacking", true);
+                }
+                else
+                {
+                    anim.SetBool("Attacking", false);
+                }
             }
              m_flashTimer -= Time.deltaTime;
             if(m_flashTimer <= 0)
             {
-                modelRenderer.materials[1].color = Color.clear;
+                //modelRenderer.materials[1].color = Color.clear;
             }            
         }
 
@@ -71,31 +75,80 @@ public class BasicZombie : Enemy
 
     public void Attack()
     {
-        Debug.Log("attack");
-        if(m_curDist <= attackRange)
+        if(m_curDist <= attackRange && IsOwner)
         {
-            ulong id = curTarget.GetComponent<NetworkObject>().OwnerClientId;
+             Debug.Log("attack");
+            if(curTarget == null)
+            {
+                Debug.Log("curTarget is null");
+                return;
+            }
 
-            ClientRpcParams clientRpcParams = new ClientRpcParams{
-                Send = new ClientRpcSendParams
-                {
-                    TargetClientIds = new ulong[] { id },
-                }
-            };
-            DealDamageClientRpc(id, clientRpcParams);
+            NetworkObject netObj = curTarget.GetComponent<NetworkObject>();
+            if (netObj == null)
+                netObj = curTarget.GetComponentInParent<NetworkObject>();
+            if (netObj == null)
+            {
+                Debug.Log("Target has no NetworkObject; cannot determine owner id");
+                return;
+            }
+            ulong id = netObj.OwnerClientId;
+
+            DealDamageRpc(id);
         }
     }
 
 
-[ClientRpc]
-    public void DealDamageClientRpc(ulong _id, ClientRpcParams rpcParams = default)
-    {
-        NetworkManager.Singleton.ConnectedClients[_id].PlayerObject.GetComponent<Health>().TakeDamage(damage);
+    [Rpc(SendTo.Everyone)]
+public void DealDamageRpc(ulong targetClientId)
+{
+    Debug.Log("[DealDamageRpc] Called for targetClientId: " + targetClientId);
 
+
+    if(targetClientId != NetworkManager.Singleton.LocalClientId)
+    {
+        Debug.LogWarning("[DealDamageRpc] This is not meant for us. Aborting.");
+        return;
     }
+
+    if (targetClientId == 0)
+    {
+        Debug.LogWarning("[DealDamageRpc] targetClientId is 0. Aborting.");
+        return;
+    }
+
+    if (NetworkManager.Singleton == null)
+    {
+        Debug.LogError("[DealDamageRpc] NetworkManager.Singleton is null. Cannot process RPC.");
+        return;
+    }
+
+    if (!NetworkManager.Singleton.ConnectedClients.TryGetValue(targetClientId, out var client))
+    {
+        Debug.LogWarning($"[DealDamageRpc] No connected client with ID {targetClientId}");
+        return;
+    }
+
+    if (client.PlayerObject == null)
+    {
+        Debug.LogWarning($"[DealDamageRpc] Client {targetClientId} has no PlayerObject assigned.");
+        return;
+    }
+
+    var health = client.PlayerObject.GetComponent<Health>();
+    if (health == null)
+    {
+        Debug.LogWarning($"[DealDamageRpc] PlayerObject of client {targetClientId} has no Health component.");
+        return;
+    }
+
+    Debug.Log($"[DealDamageRpc] Dealing {damage} damage to client {targetClientId}");
+    health.TakeDamage(damage);
+}
 
     public void Dead()
     {
+        if(!IsOwner) return;    
         EnemyManager.Instance.amountKilled++;
         m_isdead = true;
         m_deadPos = transform.position - deadOffset;
@@ -107,4 +160,6 @@ public class BasicZombie : Enemy
         modelRenderer.materials[0].color = hurtColor;
         m_flashTimer = flashTime;
     }
+
+     
 }

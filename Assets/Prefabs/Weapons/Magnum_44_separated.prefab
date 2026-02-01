@@ -369,7 +369,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3743395333
+  GlobalObjectIdHash: 4225884823
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 3
@@ -397,8 +397,8 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   muzzle: {fileID: 6537569770988577962}
   damage: 10
-  fireRate: 1
-  range: 100
+  fireRate: 2
+  range: 200
   useAmmo: 0
   maxAmmo: 30
   enemyMask:

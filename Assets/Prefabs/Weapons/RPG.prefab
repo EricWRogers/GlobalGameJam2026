@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5940507975768615342}
   - component: {fileID: 2695142224936193932}
   - component: {fileID: 3295386775610364304}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Colliders
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,7 +88,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4027897265902721171}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: RocketPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -104,7 +104,7 @@ Transform:
   m_GameObject: {fileID: 8315997205002744982}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.993, y: 0.08, z: 0}
+  m_LocalPosition: {x: 5.84, y: 0.08, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -119,7 +119,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7060551616199849269}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: AttachPoint2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -150,7 +150,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3928667382315886023}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: AttachPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -198,17 +198,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: fe834b767f0d9e6419fcf5775d428045,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.66659844
+      value: 0.03
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fe834b767f0d9e6419fcf5775d428045,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.482
+      value: 0.407
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fe834b767f0d9e6419fcf5775d428045,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -8.974705
+      value: -8.52
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fe834b767f0d9e6419fcf5775d428045,
         type: 3}
@@ -253,7 +253,7 @@ PrefabInstance:
     - target: {fileID: -445196998265924111, guid: fe834b767f0d9e6419fcf5775d428045,
         type: 3}
       propertyPath: m_Layer
-      value: 11
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: fe834b767f0d9e6419fcf5775d428045,
         type: 3}
@@ -263,7 +263,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: fe834b767f0d9e6419fcf5775d428045,
         type: 3}
       propertyPath: m_Layer
-      value: 11
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2979622327948775366, guid: fe834b767f0d9e6419fcf5775d428045,
         type: 3}
@@ -273,12 +273,12 @@ PrefabInstance:
     - target: {fileID: 9199602403423260430, guid: fe834b767f0d9e6419fcf5775d428045,
         type: 3}
       propertyPath: m_Layer
-      value: 11
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9199602403423260430, guid: fe834b767f0d9e6419fcf5775d428045,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -515,7 +515,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2415161763
+  GlobalObjectIdHash: 2894410244
   InScenePlacedSourceGlobalObjectIdHash: 2415161763
   DeferredDespawnTick: 0
   Ownership: 1
@@ -661,9 +661,9 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   muzzle: {fileID: 4688104969767942520}
   damage: 10
-  fireRate: 10
-  range: 100
-  useAmmo: 1
+  fireRate: 0.75
+  range: 200
+  useAmmo: 0
   maxAmmo: 1
   enemyMask:
     serializedVersion: 2
@@ -674,7 +674,7 @@ MonoBehaviour:
   muzzleFlashVFX: {fileID: 2917230693139556996}
   grabInteractable: {fileID: 3346495151848619225}
   triggerHeld: 0
-  projectileSpeed: 50
+  projectileSpeed: 1
   rocketSpawnPoint: {fileID: 4027897265902721171}
   rocketPrefab: {fileID: 8493037946262142551, guid: fac22fa5739f0d7438ea19d9981fe72c,
     type: 3}
@@ -689,7 +689,7 @@ PrefabInstance:
     - target: {fileID: 379555098645199393, guid: 40a5d23be7df2714ab8ac73b5233b57b,
         type: 3}
       propertyPath: m_Layer
-      value: 11
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7261150213084359708, guid: 40a5d23be7df2714ab8ac73b5233b57b,
         type: 3}
@@ -699,7 +699,7 @@ PrefabInstance:
     - target: {fileID: 7261150213084359708, guid: 40a5d23be7df2714ab8ac73b5233b57b,
         type: 3}
       propertyPath: m_Layer
-      value: 11
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7377871298733478892, guid: 40a5d23be7df2714ab8ac73b5233b57b,
         type: 3}
