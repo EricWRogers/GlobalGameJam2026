@@ -93,13 +93,13 @@ public abstract class GunBase : NetworkBehaviour
         MuzzleFlash();
 
         // Broadcast effects to ALL other clients
-        FireEffectsClientRpc(origin, dir);
+        FireEffectsRpc(origin, dir);
     }
 
-    [ClientRpc]
-    private void FireEffectsClientRpc(Vector3 origin, Vector3 dir)
+    [Rpc(SendTo.Everyone)]
+    private void FireEffectsRpc(Vector3 origin, Vector3 dir)
     {
-        Debug.Log("Firing Client RPC");
+        Debug.Log("Firing effects RPC");
         if (IsOwner) return;
         MuzzleFlash();
     }

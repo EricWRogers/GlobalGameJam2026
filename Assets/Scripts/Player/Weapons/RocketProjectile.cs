@@ -1,82 +1,223 @@
-using Unity.Netcode;
+using System;
+using System.Collections;
 using UnityEngine;
-
-public class RocketProjectile : NetworkBehaviour    
+namespace XRMultiplayer
 {
-    [SerializeField] float lifetime = 5f;
-    [SerializeField] float speed = 50f;
-    [SerializeField] LayerMask enemyMask;
-    public float radius = 5f;
-    public int explosionDamage = 30;
-
-
-
-    void Start() 
+    /// <summary>
+    /// Represents a projectile in the game.
+    /// </summary>
+    public class RocketProjectile : MonoBehaviour
     {
-    }
+        /// <summary>
+        /// The trail renderer for the projectile.
+        /// </summary>
+        [SerializeField] protected TrailRenderer m_TrailRenderer;
 
-    public void StartRocket()
-    {
-        if (IsOwner)
+        [SerializeField] protected float m_Lifetime = 10.0f;
+
+        /// <summary>
+        /// The previous position of the projectile.
+        /// </summary>
+        Vector3 m_PrevPos = Vector3.zero;
+
+        /// <summary>
+        /// The raycast hit for the projectile.
+        /// </summary>
+        RaycastHit m_Hit;
+
+        /// <summary>
+        /// Indicates whether the projectile has hit a target.
+        /// </summary>
+        bool m_HasHitTarget = false;
+
+        /// <summary>
+        /// Indicates whether the projectile belongs to the local player.
+        /// </summary>
+        bool m_LocalPlayerProjectile;
+
+        Action<RocketProjectile> m_OnReturnToPool;
+
+        Rigidbody m_Rigidybody;
+
+        public GameObject explosionEffect;
+
+
+        /// <summary>
+        /// Sets up the projectile with the specified parameters.
+        /// </summary>
+        /// <param name="localPlayer">Indicates whether the projectile belongs to the local player.</param>
+        /// <param name="playerColor">The color of the player.</param>
+        public void Setup(bool localPlayer, Action<RocketProjectile> returnToPoolAction = null)
         {
-            // Owner moves it forward (client-side prediction)
-            var rb = GetComponent<Rigidbody>();
-            rb.linearVelocity = transform.forward * speed;
-        }
-    }
+            if (m_Rigidybody == null)
+            {
+                TryGetComponent(out m_Rigidybody);
+            }
 
-    void OnCollisionEnter(Collision collision)
-    {
-        // Hit effects, damage logic here
-        if (IsServer || IsHost) // Authoritative damage
-        {
-           DamageInExplosionSphere(collision.contacts[0].point, radius, explosionDamage);
-        }
-        NetworkObject.Despawn(); // Server can despawn
-    }
-
-
-    void HitTarget(GameObject target)
-    {
-        // Example damage logic
-
-    
-    }
-
-    [ClientRpc]
-    private void RocketExplosionClientRpc(Vector3 explosionPos, float explosionRadius, int damage)
-    {
-        DamageInExplosionSphere(explosionPos, explosionRadius, damage);
-    }
-
-
-    private void DamageInExplosionSphere(Vector3 center, float radius, int damage)
-{
-    // Sphere cast from explosion center
-    RaycastHit[] hits = Physics.SphereCastAll(
-        center, 
-        radius, 
-        transform.forward,  
-        0f,                 
-        enemyMask,         
-        QueryTriggerInteraction.Collide
-    );
-
-    foreach (RaycastHit hit in hits)
-    {
-        // Get the health component
-        var health = hit.collider.GetComponent<Health>();
-        if (health != null)
-        {
-            // Falloff damage based on distance from center
-            float distance = Vector3.Distance(center, hit.point);
 
             
-            // Apply damage (only authoritative if you have server validation)
-            health.TakeDamage(damage);
+            m_PrevPos = transform.position;
+            if (returnToPoolAction != null)
+            {
+                m_OnReturnToPool = returnToPoolAction;
+                StartCoroutine(ResetProjectileAfterTime());
+            }
+        }
+
+        IEnumerator ResetProjectileAfterTime()
+        {
+            yield return new WaitForSeconds(m_Lifetime);
+            ResetProjectile();
+        }
+
+        /// <inheritdoc/>
+        private void FixedUpdate()
+        {
+            if (!m_LocalPlayerProjectile || m_HasHitTarget) return;
+            if (Physics.Linecast(m_PrevPos, transform.position, out m_Hit))
+            {
+                if (m_Hit.transform.CompareTag("Target"))
+                {
+                    HitTarget(m_Hit.transform.GetComponentInParent<Target>());
+                }
+
+                CheckForInteractableHit(m_Hit.transform);
+            }
+
+            m_PrevPos = transform.position;
+        }
+
+        /// <inheritdoc/>
+        void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Target"))
+            {
+                HitTarget(other.GetComponentInParent<Target>());
+            }
+        }
+
+        void OnCollisionEnter(Collision collision)
+        {
+            Debug.Log("Rocket Projectile Collided");
+            if (!m_LocalPlayerProjectile) return;
+            CheckForInteractableHit(collision.transform);
+            ExplosionDamage(transform.position);
+
+        }
+
+
+
+        void ExplosionDamage(Vector3 position)
+        {
+            explosionEffect.SetActive(true);
+            RaycastHit[] hits = Physics.SphereCastAll(position, 5f, Vector3.up, 0f);
+            foreach (RaycastHit hit in hits)
+            {
+                if (hit.transform.CompareTag("Enemy"))
+                {
+                    Health enemyHealth = hit.transform.GetComponent<Health>();
+                    if (enemyHealth != null)
+                    {
+                        enemyHealth.TakeDamage(30);
+                    }
+                }
+            }
+            Invoke("ResetProjectile", 0.5f);
+        }
+
+        void CheckForInteractableHit(Transform t)
+        {
+            NetworkPhysicsInteractable networkPhysicsInteractable = t.GetComponentInParent<NetworkPhysicsInteractable>();
+            if (networkPhysicsInteractable != null)
+            {
+                networkPhysicsInteractable.RequestOwnership();
+            }
+        }
+
+        /// <summary>
+        /// Called when the projectile hits a target.
+        /// </summary>
+        /// <param name="target">The target that was hit.</param>
+        protected virtual void HitTarget(Target target)
+        {
+            target.TargetHitLocal();
+            m_HasHitTarget = true;
+        }
+
+        public void ResetProjectile()
+        {
+            StopAllCoroutines();
+            m_OnReturnToPool?.Invoke(this);
         }
     }
-
-}
 }
 
+
+
+
+
+
+//using Unity.Netcode;
+//using UnityEngine;
+//namespace XRMultiplayer{
+//
+//public class RocketProjectile : NetworkBehaviour    
+//{
+//    [SerializeField] float lifetime = 5f;
+//    [SerializeField] float speed = 50f;
+//    [SerializeField] LayerMask enemyMask;
+//    public float radius = 5f;
+//    public int explosionDamage = 30;
+//
+//    private Rigidbody m_Rigidybody;
+//    private Vector3 m_PrevPos;
+//
+//
+//
+//
+//
+//    void Start() 
+//    {
+//    }
+//
+//    public void Setup(bool localPlayer)
+//        {
+//            if (m_Rigidybody == null)
+//            {
+//                TryGetComponent(out m_Rigidybody);
+//            }
+//
+//            
+//        }
+//
+//
+//    public void OnTriggerEnter(Collider other)
+//        {
+//            if (other.CompareTag("Enemyh"))
+//            {
+//                Health enemuyHealth = other.GetComponent<Health>();
+//                if (enemuyHealth != null)
+//                {
+//                    enemuyHealth.TakeDamage(explosionDamage);
+//                }
+//            }
+//
+//            
+//        }
+//
+//
+//    void HitTarget(GameObject target)
+//    {
+//        // Example damage logic
+//
+//    
+//    }
+//
+//    [Rpc(SendTo.Everyone)]
+//    private void RocketExplosionRpc(Vector3 explosionPos, float explosionRadius, int damage)
+//    {
+//       //DamageInExplosionSphere(explosionPos, explosionRadius, damage);
+//    }
+//
+//}
+//}
