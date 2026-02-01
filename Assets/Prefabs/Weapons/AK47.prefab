@@ -826,6 +826,7 @@ GameObject:
   - component: {fileID: 8102496519766471411}
   - component: {fileID: 6871076655207858197}
   - component: {fileID: 4964825065032313618}
+  - component: {fileID: 7295728482722764118}
   m_Layer: 0
   m_Name: AK47
   m_TagString: Untagged
@@ -1195,7 +1196,7 @@ MonoBehaviour:
   muzzle: {fileID: 5256239687508070692}
   damage: 5
   fireRate: 4
-  range: 100
+  range: 200
   useAmmo: 0
   maxAmmo: 30
   enemyMask:
@@ -1230,6 +1231,32 @@ MonoBehaviour:
   m_MinimumScaleRatio: 0.25
   m_MaximumScaleRatio: 2
   m_ScaleMultiplier: 0.25
+--- !u!114 &7295728482722764118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7231109227704276350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b734f2bd29eeddd4d85afb0c266228c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Inputs.Haptics.HapticImpulsePlayer
+  m_HapticOutput:
+    m_InputSourceMode: 2
+    m_InputAction:
+      m_Name: Haptic
+      m_Type: 2
+      m_ExpectedControlType: 
+      m_Id: 4c657695-b9b7-4cc9-968d-297eea0a9c1b
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_InputActionReference: {fileID: 0}
+    m_ObjectReferenceObject: {fileID: 0}
+  m_AmplitudeMultiplier: 1
 --- !u!1 &8333442025884666572
 GameObject:
   m_ObjectHideFlags: 0
