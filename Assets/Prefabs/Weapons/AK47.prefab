@@ -1052,7 +1052,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2551676579
+  GlobalObjectIdHash: 3102825978
   InScenePlacedSourceGlobalObjectIdHash: 2727466294
   DeferredDespawnTick: 0
   Ownership: 3
@@ -1196,7 +1196,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   muzzle: {fileID: 5256239687508070692}
   damage: 5
-  fireRate: 4
+  fireRate: 8.5
   range: 200
   useAmmo: 0
   maxAmmo: 30
