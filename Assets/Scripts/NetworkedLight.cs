@@ -4,45 +4,49 @@ using UnityEngine;
 public class NetworkedLight : NetworkBehaviour 
 {
     public Light targetLight;
-    private bool isOn = false; 
+
+    readonly NetworkVariable<bool> m_IsOn = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     public void TurnOn()
     {
-        if (isOn) return; 
-        
-        Debug.Log($"Turning light ON from client {OwnerClientId}");
-        isOn = true;
-        
+        if (m_IsOn.Value) return;
+
+        Debug.Log($"Turning light ON from client {NetworkManager.Singleton.LocalClientId}");
+        m_IsOn.Value = true;
+
         if (targetLight) targetLight.enabled = true;
-        
-        
-        ClientRpcParams clientRpcParams = new ClientRpcParams
-        {
-            Send = new ClientRpcSendParams
-            {
-                TargetClientIds = GetOtherClientIds()
-            }
-        };
-        
-        TurnOnClientRpc(clientRpcParams);
+
+        // Owner -> Everyone RPC pattern
+        TurnOnOwnerRpc(NetworkManager.Singleton.LocalClientId);
     }
 
-    [ClientRpc]
-    private void TurnOnClientRpc(ClientRpcParams clientRpcParams = default)
+    [Rpc(SendTo.Owner)]
+    void TurnOnOwnerRpc(ulong clientId)
     {
-        Debug.Log("ClientRpc received - turning light ON");
-        isOn = true;
-        if (targetLight) targetLight.enabled = true;
+        m_IsOn.Value = true;
+        TurnOnRpc(clientId);
+    }
+
+    [Rpc(SendTo.Everyone)]
+    void TurnOnRpc(ulong clientId)
+    {
+        Debug.Log($"TurnOnRpc invoked on {NetworkManager.Singleton.LocalClientId} from {clientId}");
+        if (clientId != NetworkManager.Singleton.LocalClientId)
+        {
+            m_IsOn.Value = true;
+            if (targetLight) targetLight.enabled = true;
+        }
     }
     
+    // Kept for compatibility, not used by Rpc(SendTo.*) pattern
     private ulong[] GetOtherClientIds()
     {
         var clients = NetworkManager.Singleton.ConnectedClients;
         var otherClients = new System.Collections.Generic.List<ulong>();
-        
+
         foreach (var client in clients)
         {
-            if (client.Key != OwnerClientId) 
+            if (client.Key != OwnerClientId)
                 otherClients.Add(client.Key);
         }
         return otherClients.ToArray();

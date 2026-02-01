@@ -43,8 +43,8 @@ public class RocketProjectile : NetworkBehaviour
     
     }
 
-    [ClientRpc]
-    private void RocketExplosionClientRpc(Vector3 explosionPos, float explosionRadius, int damage)
+    [Rpc(SendTo.Everyone)]
+    private void RocketExplosionRpc(Vector3 explosionPos, float explosionRadius, int damage)
     {
         DamageInExplosionSphere(explosionPos, explosionRadius, damage);
     }
