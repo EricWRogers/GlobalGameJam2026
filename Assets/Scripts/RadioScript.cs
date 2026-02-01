@@ -30,7 +30,7 @@ public class RadioScript : NetworkBehaviour
             activated = true;
             Debug.Log("Radio activated! (local)");
             
-            // Send to OTHER clients only (EXACTLY like NetworkedLight)
+            
             ClientRpcParams clientRpcParams = new ClientRpcParams
             {
                 Send = new ClientRpcSendParams
@@ -74,7 +74,7 @@ public class RadioScript : NetworkBehaviour
     private void CheckKnobClientRpc(float knobValue, ClientRpcParams clientRpcParams = default)
     {
         Debug.Log($"CheckKnob RPC received: {knobValue}");
-        if (Mathf.Approximately(knobValue, 1f) && !completed)
+        if (knobValue > 0.9f && !completed)
         {
             completed = true;
             Debug.Log("RADIO COMPLETED!");
