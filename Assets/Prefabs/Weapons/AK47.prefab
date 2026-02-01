@@ -1197,7 +1197,7 @@ MonoBehaviour:
   muzzle: {fileID: 5256239687508070692}
   damage: 5
   fireRate: 8.5
-  range: 200
+  range: 1000
   useAmmo: 0
   maxAmmo: 30
   enemyMask:
@@ -1207,6 +1207,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 769
   muzzleFlashVFX: {fileID: 6130875182695885756}
+  rb: {fileID: 0}
+  recoilForce: 10
   grabInteractable: {fileID: 455897827494601988}
   triggerHeld: 0
   gunAudioSource: {fileID: 7965740082664177085}
