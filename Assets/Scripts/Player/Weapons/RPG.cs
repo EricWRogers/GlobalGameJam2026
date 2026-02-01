@@ -40,15 +40,16 @@ public class RPG : GunBase
                 return;
             }
         projectile.transform.SetPositionAndRotation(rocketSpawnPoint.position, rocketSpawnPoint.rotation);
-        projectile.Setup(IsOwner, OnProjectileDestroy);
+        projectile.Setup(IsOwner, OnProjectileDestroy, projectileSpeed);
         
 
          if (newObject.TryGetComponent(out Rigidbody rigidBody))
         {
-            rigidBody.isKinematic = true;
-            rigidBody.isKinematic = false;
-            Vector3 force = dir * projectileSpeed;
-            rigidBody.AddForce(force);
+            //rigidBody.isKinematic = true;
+            //rigidBody.isKinematic = false;
+            rigidBody.linearVelocity = Vector3.zero;
+            //Vector3 force = dir.normalized * projectileSpeed;
+            //rigidBody.AddForce(force );
         }
         Debug.Log("Fired RPG Rocket");
         m_ProjectileQueue.Add(projectile);
@@ -73,6 +74,7 @@ public class RPG : GunBase
 
         void OnProjectileDestroy(RocketProjectile projectile)
     {
+        projectile.explosionEffect.SetActive(false);
         if (m_ProjectileQueue.Contains(projectile))
         {
             m_ProjectileQueue.Remove(projectile);
