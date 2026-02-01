@@ -1194,7 +1194,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   muzzle: {fileID: 5256239687508070692}
   damage: 5
-  fireRate: 2
+  fireRate: 4
   range: 100
   useAmmo: 0
   maxAmmo: 30
