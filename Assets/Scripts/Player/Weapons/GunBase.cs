@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
+using XRMultiplayer;
 
 public abstract class GunBase : NetworkBehaviour
 {
@@ -33,6 +35,18 @@ public abstract class GunBase : NetworkBehaviour
     public bool triggerHeld = false;
 
     public AudioSource gunAudioSource;
+
+    public BloodPool bloodPool;
+
+    public SparkPool sparkPool;
+    public List<SparkOBJ> m_SparkQueue = new();
+
+
+    void Awake()
+    {
+        bloodPool = FindFirstObjectByType<BloodPool>();
+        sparkPool = FindFirstObjectByType<SparkPool>();
+    }
 
     public void SetTriggerHeld(bool held)
     {
