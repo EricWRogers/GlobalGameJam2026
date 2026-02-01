@@ -19,9 +19,6 @@ public class EnemyManager : NetworkBehaviour
         m_serverIsReady = true;
 
     }
-
-
-
     void Update()
     {
         
@@ -29,15 +26,16 @@ public class EnemyManager : NetworkBehaviour
         m_timer -= Time.deltaTime;
         if(m_timer <= 0 && m_amountSpawned <= spawnAmount)
         {
-            SpawnEnemyClientRpc(spawnPos.position);
+            SpawnEnemy(spawnPos.position);
             m_amountSpawned++;
             m_timer = spawnTimer;
         }
     }
-    [ClientRpc]
-    void SpawnEnemyClientRpc(Vector3 _pos, ClientRpcParams clientRpcParams = default)
+    void SpawnEnemy(Vector3 _pos)
     {
         GameObject enemy = Instantiate(prefab, _pos, transform.rotation);
+        float randomScale = Random.Range(.85f, 1.15f);
+        enemy.transform.localScale = new Vector3(randomScale, randomScale, randomScale);
         enemy.GetComponent<NetworkObject>().Spawn();
     }
 }

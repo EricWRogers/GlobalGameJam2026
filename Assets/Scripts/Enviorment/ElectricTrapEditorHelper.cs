@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 
-
+[ExecuteInEditMode]
 public class ElectricTrapEditorHelper : MonoBehaviour
 {
     public Transform Pos1;
@@ -13,12 +13,19 @@ public class ElectricTrapEditorHelper : MonoBehaviour
     public Transform Pos4;
 
     public float maxDistance = 20.0f;
-    
-    void OnValidate()
-    {
-        Vector3 midPoint = (Pos1.position + Pos4.position) * 0.5f;
 
-        Debug.Log("Mid Point: " + midPoint);
+    public Vector3 parentPos;
+    
+    void Update()
+    {
+        if (transform.hasChanged == false)
+            return;
+        
+        Vector3 midPoint = transform.parent.position;//(Pos1.position + Pos4.position) * 0.5f;
+        parentPos = midPoint;
+        midPoint.y -= 2;
+
+        //Debug.Log("Mid Point: " + midPoint);
 
         // ray cast toward Pos1 and find new Pos1
         {

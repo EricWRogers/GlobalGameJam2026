@@ -2,6 +2,7 @@ using System;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.VFX;
+using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public abstract class GunBase : NetworkBehaviour
@@ -16,11 +17,13 @@ public abstract class GunBase : NetworkBehaviour
     [SerializeField] protected bool useAmmo = false;
     [SerializeField] protected int maxAmmo = 30;
     protected int currentAmmo;
+    
     [SerializeField] protected LayerMask enemyMask;
     [SerializeField] protected LayerMask hitMask;
     [SerializeField] private VisualEffect muzzleFlashVFX;
-    protected float nextFireLocal;
-    protected float nextFireServer = 0f;
+    
+    // Owner-only rate limiting
+    protected float nextFireTime;
 
     public XRGrabInteractable grabInteractable;
     public bool triggerHeld = false;
@@ -30,134 +33,92 @@ public abstract class GunBase : NetworkBehaviour
         triggerHeld = held;
     }
 
-    void Awake()
+    public override void OnNetworkSpawn()
     {
         currentAmmo = maxAmmo;
-    }
-    //public override void OnNetworkSpawn()
-    //{
-    //    if(!IsOwner)
-    //    {
-    //        grabInteractable.enabled = false;
-    //    }
-    //    else
-    //    {
-    //        grabInteractable.enabled = true;
-    //        grabInteractable.selectExited.AddListener(_ => triggerHeld = false);
-    //        grabInteractable.selectEntered.AddListener(_ => triggerHeld = true);
-    //    }
-    //}
-//
-    void Update()
-    {
-        if(triggerHeld)
-        {
-            TryFire();
-        }
 
-        if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsListening)
-    {
-        Debug.Log("No network session running (no host/server).");
-        return;
+        grabInteractable.selectEntered.AddListener(OnGrabbed);
+        grabInteractable.selectExited.AddListener(OnDropped);
+
+        grabInteractable.activated.AddListener(OnActivated);
+        grabInteractable.deactivated.AddListener(OnDeactivated);
+        
     }
 
-    // Am I the host (client + server in one)?
-    if (NetworkManager.Singleton.IsHost)
+    private void OnGrabbed(SelectEnterEventArgs args)
     {
-        Debug.Log("I am the host (server + client).");
+        
     }
 
-    // Am I a dedicated server?
-    if (NetworkManager.Singleton.IsServer && !NetworkManager.Singleton.IsClient)
+    private void OnDropped(SelectExitEventArgs args)
     {
-        Debug.Log("I am a dedicated server.");
+        triggerHeld = false;
     }
 
-    // Am I a pure client connected to some host?
-    if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
+    private void OnActivated(ActivateEventArgs args)
     {
-        Debug.Log("I am a client connected to a host.");
+        triggerHeld = true;   // trigger pressed
     }
+
+    private void OnDeactivated(DeactivateEventArgs args)
+    {
+        triggerHeld = false;  // trigger released
+    }
+
+    public  void Update()
+    {
+        // Owner-only firing logic
+        if (!IsOwner || !triggerHeld) return;
+        TryFire();
     }
 
     public void TryFire()
     {
-        Debug.Log("Before Is Owner Check");
-        if (!IsOwner) return;
-        Debug.Log("Trying to fire Is Owner");
-
+        // Rate limiting FIRST
+        if (Time.time < nextFireTime) return;
+        
         if (useAmmo && currentAmmo <= 0) return;
 
-        nextFireLocal = Time.time + (1f / fireRate);
+        // Update authoritative state
+        nextFireTime = Time.time + (1f / fireRate);
+        if (useAmmo) currentAmmo--;
 
-        ClientRpcParams clientRpcParams = new ClientRpcParams
-        {
-            Send = new ClientRpcSendParams
-            {
-                TargetClientIds = GetOtherClientIds()
-            }
-        };
+        Vector3 origin = muzzle.position;
+        Vector3 dir = muzzle.forward;
 
+        // Owner does FULL authoritative firing (damage, raycast, etc.)
+        ShootGun(origin, dir);
+        
+        // Owner plays effects locally
+        MuzzleFlash();
 
-        FireClientRpc(muzzle.position, muzzle.forward, clientRpcParams);
-        Debug.Log("Called Fire Client RPC");
+        // Broadcast effects to ALL other clients
+        FireEffectsClientRpc(origin, dir);
     }
-
-
-    //[ServerRpc(RequireOwnership = false)]
-    //private void FireServerRpc(Vector3 origin, Vector3 dir, ServerRpcParams rpc = default)
-    //{
-    //    Debug.Log("Server RCP Fired");
-    //    nextFireServer = Time.time + (1f / fireRate);
-
-    //    dir.Normalize();
-
-    //    FireClientRpc(origin, dir);
-    //}
-
 
     [ClientRpc]
-    private void FireClientRpc(Vector3 origin, Vector3 dir, ClientRpcParams clientRpcParams = default)
+    private void FireEffectsClientRpc(Vector3 origin, Vector3 dir)
     {
-        if(IsOwner)
-        {
-            Debug.Log("Owner firing gun");
-            ShootGun(origin, dir);
-            muzzleFlashVFX.Play();
-            return;
-        }
-        
+        Debug.Log("Firing Client RPC");
+        if (IsOwner) return;
         MuzzleFlash();
-        Debug.Log("Fired AK " );
     }
-
-
-
 
     protected void MuzzleFlash()
     {
-    
-        Debug.Log("Playing Muzzle Flash VFX");
-        if(IsOwner) return;
-        muzzleFlashVFX.Play();
+        Debug.Log("Playing Muzzle Flash VFX");  
+        if (muzzleFlashVFX != null)
+            muzzleFlashVFX.Play();
     }
+    
     protected abstract void ShootGun(Vector3 origin, Vector3 dir);
 
-
-
-
-    private ulong[] GetOtherClientIds()
+    public override void OnNetworkDespawn()
     {
-        var clients = NetworkManager.Singleton.ConnectedClients;
-        var otherClients = new System.Collections.Generic.List<ulong>();
-        
-        foreach (var client in clients)
+        if (IsOwner && grabInteractable != null)
         {
-            if (client.Key != OwnerClientId) 
-                otherClients.Add(client.Key);
+            grabInteractable.selectEntered.RemoveListener(OnGrabbed);
+            grabInteractable.selectExited.RemoveListener(OnDropped);
         }
-        return otherClients.ToArray();
     }
-
-
 }

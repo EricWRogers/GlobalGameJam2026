@@ -12,6 +12,7 @@ public class AKGun : GunBase
 
         if(hitInfo.collider.tag == "Enemy")
         {
+            
             Health enemyHealth = hitInfo.collider.GetComponent<Health>();
             if(enemyHealth != null)
             {
