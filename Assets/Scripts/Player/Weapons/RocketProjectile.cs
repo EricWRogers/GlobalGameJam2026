@@ -35,11 +35,18 @@ namespace XRMultiplayer
         /// </summary>
         bool m_LocalPlayerProjectile;
 
+        private float projectileSpeed = 50f;
+
         Action<RocketProjectile> m_OnReturnToPool;
 
         Rigidbody m_Rigidybody;
 
         public GameObject explosionEffect;
+        bool hitSomthing = false;
+
+        public LayerMask enemyMask;
+       public LayerMask hitmask;
+        
 
 
         /// <summary>
@@ -47,13 +54,14 @@ namespace XRMultiplayer
         /// </summary>
         /// <param name="localPlayer">Indicates whether the projectile belongs to the local player.</param>
         /// <param name="playerColor">The color of the player.</param>
-        public void Setup(bool localPlayer, Action<RocketProjectile> returnToPoolAction = null)
+        public void Setup(bool localPlayer, Action<RocketProjectile> returnToPoolAction = null, float projectileSpeed = 50f)
         {
+            this.projectileSpeed = projectileSpeed;
             if (m_Rigidybody == null)
             {
                 TryGetComponent(out m_Rigidybody);
             }
-
+            hitSomthing = false;
 
             m_LocalPlayerProjectile = localPlayer;
             m_PrevPos = transform.position;
@@ -74,15 +82,12 @@ namespace XRMultiplayer
         private void FixedUpdate()
         {
             if (!m_LocalPlayerProjectile || m_HasHitTarget) return;
-            if (Physics.Linecast(m_PrevPos, transform.position, out m_Hit))
+            if (Physics.Linecast(m_PrevPos, transform.position, out m_Hit, hitmask))
             {
-                if (m_Hit.transform.CompareTag("Target"))
-                {
-                    HitTarget(m_Hit.transform.GetComponentInParent<Target>());
-                }
-
-                CheckForInteractableHit(m_Hit.transform);
+                ExplosionDamage(m_Hit.point);
             }
+            if(!hitSomthing)
+                transform.position += transform.right * projectileSpeed * Time.fixedDeltaTime;
 
             m_PrevPos = transform.position;
         }
@@ -92,7 +97,7 @@ namespace XRMultiplayer
         {
             
             if (!m_LocalPlayerProjectile) return;
-            //CheckForInteractableHit(other.transform);
+            hitSomthing = true;
             ExplosionDamage(transform.position);
         }
 
@@ -100,7 +105,7 @@ namespace XRMultiplayer
         {
             
             if (!m_LocalPlayerProjectile) return;
-            CheckForInteractableHit(collision.transform);
+            //CheckForInteractableHit(collision.transform);
             ExplosionDamage(transform.position);
 
         }
@@ -133,6 +138,8 @@ namespace XRMultiplayer
                 networkPhysicsInteractable.RequestOwnership();
             }
         }
+
+
 
         /// <summary>
         /// Called when the projectile hits a target.
