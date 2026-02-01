@@ -34,6 +34,8 @@ public class EnemyManager : NetworkBehaviour
     void SpawnEnemy(Vector3 _pos)
     {
         GameObject enemy = Instantiate(prefab, _pos, transform.rotation);
+        float randomScale = Random.Range(.85f, 1.15f);
+        enemy.transform.localScale = new Vector3(randomScale, randomScale, randomScale);
         enemy.GetComponent<NetworkObject>().Spawn();
     }
 }

@@ -13,6 +13,11 @@ public class BasicZombie : Enemy
     public float decayDelay;
     public Vector3 deadOffset;
     private Vector3 m_deadPos;
+
+    public SkinnedMeshRenderer modelRenderer;
+    public Color hurtColor;
+    public float flashTime;
+    private float m_flashTimer;
     new void Start()
     {
         base.Start();
@@ -39,6 +44,11 @@ public class BasicZombie : Enemy
             else
             {
                 anim.SetBool("Attacking", false);
+            }
+             m_flashTimer -= Time.deltaTime;
+            if(m_flashTimer <= 0)
+            {
+                modelRenderer.materials[1].color = Color.clear;
             }            
         }
 
@@ -90,5 +100,10 @@ public class BasicZombie : Enemy
         m_deadPos = transform.position - deadOffset;
         anim.SetBool("Dead", true);
         
+    }
+    public void FlashRed()
+    {
+        modelRenderer.materials[0].color = hurtColor;
+        m_flashTimer = flashTime;
     }
 }
