@@ -86,7 +86,7 @@ namespace XRMultiplayer
         /// <inheritdoc/>
         private void FixedUpdate()
         {
-            if (!m_LocalPlayerProjectile || m_HasHitTarget) return;
+            if (m_HasHitTarget) return;
             if (Physics.Linecast(m_PrevPos, transform.position + transform.right * 0.5f, out m_Hit, hitmask))
             {
                 if (m_Hit.collider.isTrigger == false)
